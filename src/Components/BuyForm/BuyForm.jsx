@@ -128,6 +128,10 @@ const BuyForm = forwardRef((props, _ref) => {
     setState({ ...state, [event.target.name]: event.target.value });
   };
 
+  const handleChangeCheck = (event) => {
+    setState({ ...state, [event.target.name]: event.target.checked });
+  }
+ 
   const handleChangeStart = (event) => {
     setState({ ...state, startDate: event });
   };
@@ -199,7 +203,7 @@ const BuyForm = forwardRef((props, _ref) => {
                   name="withChange"
                   type="checkbox"
                   checked={state.withChange}
-                  onChange={handleChange}
+                  onChange={handleChangeCheck}
                 />
                 Soluzioni senza cambi
               </label>
@@ -215,7 +219,7 @@ const BuyForm = forwardRef((props, _ref) => {
                 name="roundtrip"
                 type="checkbox"
                 checked={state.roundtrip}
-                onChange={handleChange}
+                onChange={handleChangeCheck}
               />
               Andata e ritorno
             </label>
