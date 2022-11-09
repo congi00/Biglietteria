@@ -8,7 +8,7 @@ import PropTypes from "prop-types";
 function StepContainer(props) {
   const classes = useStyles();
 
-  console.log("%c StepContainer render props: ", "color:#f22", props);
+  //console.log("%c StepContainer render props: ", "color:#f22", props);
   return (
     <div>
       <div>{props.children}</div>

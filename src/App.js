@@ -62,8 +62,6 @@ function App() {
 
   const onBridgeTrenitaliaResponse = (response) => {
     const {endpoint, result} = response
-
-    console.log(endpoint)
     switch(endpoint){
       case "getSolutions": 
         //Increment step && update state solutions
@@ -79,7 +77,6 @@ function App() {
         break;
       }
       default:{
-        console.log();
         break;
       }
     }
@@ -96,7 +93,7 @@ function App() {
 
 
     
-
+  console.debug("App -> render -> state: ",state)
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

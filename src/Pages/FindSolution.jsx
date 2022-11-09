@@ -118,7 +118,7 @@ const getSaleability = (trains) => {
 };
 
 const nextPage = (paginationData) => {
-  console.log("NextPage:", paginationData);
+  // console.log("NextPage:", paginationData);
   return paginationData + 1;
 };
 
@@ -176,8 +176,8 @@ function FindSolution({ searchingTicket, solutions, onGoNextBuy, solutionRecap }
             <h5 className={classes.dataRecapTitle}>Ragazzi: </h5>
           </div>
           <div className={classes.dataRecap}>
-            <h5>{searchingTicket.startStation}</h5>
-            <h5>{searchingTicket.arriveStation}</h5>
+            <h5>{searchingTicket.startStation.name}</h5>
+            <h5>{searchingTicket.arriveStation.name}</h5>
             <h5>{searchingTicket.startDate.toDateString()}</h5>
             <h5>{searchingTicket.adultsN}</h5>
             <h5>{searchingTicket.kidsN}</h5>
@@ -264,7 +264,7 @@ function FindSolution({ searchingTicket, solutions, onGoNextBuy, solutionRecap }
     return structSolution;
   });
 
-  console.log("FindSolution -> render -> paginationData: ", paginationData);
+  // console.log("FindSolution -> render -> paginationData: ", paginationData);
   return (
     <div className={classes.FindSolution}>
       <StepContainer onCancel={() => {}}>

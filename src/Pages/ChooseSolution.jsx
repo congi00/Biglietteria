@@ -42,8 +42,8 @@ function ChooseSolution({ solutionDetails, solutionRecap }) {
     solutionRecap?.legs[solutionRecap?.legs.length - 1].endDateTime
   );
   const duration = solutionRecap?.journeyDuration.split(":");
-  console.log("ChooseSolution -> render -> solutionDetails: ", solutionDetails);
-  console.log("ChooseSolution -> render -> solutionRecap: ", solutionRecap);
+  // console.log("ChooseSolution -> render -> solutionDetails: ", solutionDetails);
+  // console.log("ChooseSolution -> render -> solutionRecap: ", solutionRecap);
 
   const propContent = [
     {

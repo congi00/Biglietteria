@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef , useMemo} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import ButtonForm from "../../Components/ButtonForm/ButtonForm.jsx";
 import FavoriteIcon from "@material-ui/icons/Favorite";
@@ -8,6 +8,9 @@ import SwapVertIcon from "@material-ui/icons/SwapVert";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import Divider from "@material-ui/core/Divider";
+import Button from "@material-ui/core/Button";
+import Link from "@material-ui/core/Link";
+import TextField from "@material-ui/core/TextField";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
@@ -17,6 +20,25 @@ import { it } from "date-fns/locale";
 import { useImperativeHandle } from "react";
 import { Box } from "@material-ui/core";
 import Card from "../Card/Card";
+import Autocomplete, {
+  createFilterOptions,
+} from "@material-ui/lab/Autocomplete";
+import stations from "../../StationList/trenitalia_station_list.json";
+
+/*
+station.data['stations'].map((station, index) => {
+    return station[1]
+})
+*/
+
+const internalStations = stations.data.stations.map((station, index) => {
+  return {
+    id: station[0],
+    name: station[1],
+    latitude: station[2],
+    longitude: station[3],
+  };
+});
 
 const useStyles = makeStyles((theme, props) => {
   return {
@@ -25,6 +47,7 @@ const useStyles = makeStyles((theme, props) => {
       textAlign: "center",
       width: "100%",
       height: "100%",
+      paddingBottom: "40px",
     },
     infoTitle: {
       fontFamily: "Gotham",
@@ -61,6 +84,8 @@ const useStyles = makeStyles((theme, props) => {
       width: "100%",
       marginTop: "5px",
       borderRadius: "0px",
+      backgroundColor: "#fff",
+      paddingLeft: "10px",
     },
     inputLabel: {
       color: "#fff",
@@ -101,21 +126,37 @@ const useStyles = makeStyles((theme, props) => {
       display: "flex",
     },
     menuButton: {
-        backgroundColor: "#E9E017",
-        borderRadius: "0px",
-        width: "75px",
-        height:"48px",
-        margin: "5px 10px 0 0"
+      backgroundColor: "#E9E017",
+      borderRadius: "0px",
+      width: "75px",
+      height: "48px",
+      margin: "5px 10px 0 0",
     },
-    numberI: {}
+    numberI: {
+      width: "75px",
+      height: "48px",
+      padding: "0 0 6px 10px",
+      marginRight: "10px",
+      textAlign: "center",
+    },
+    cartaBox: {
+      display: "flex",
+      justifyContent: "space-between",
+      margin: "20px 0 20px 0",
+    },
+    paginationContent: {
+      color: "yellow",
+    },
   };
 });
+
+const MAX_PASSENGERS = 5;
 
 const BuyForm = forwardRef((props, _ref) => {
   const classes = useStyles();
   const [state, setState] = React.useState({
-    startStation: "",
-    arriveStation: "",
+    startStation: null,
+    arriveStation: null,
     withChange: false,
     roundtrip: false,
     startDate: null,
@@ -124,14 +165,14 @@ const BuyForm = forwardRef((props, _ref) => {
     kidsN: 0,
   });
 
-  const handleChange = (event) => {
-    setState({ ...state, [event.target.name]: event.target.value });
+  const handleChangeStation = (value, nameState) => {
+    setState({ ...state, [nameState]: value });
   };
 
   const handleChangeCheck = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
-  }
- 
+  };
+
   const handleChangeStart = (event) => {
     setState({ ...state, startDate: event });
   };
@@ -140,11 +181,72 @@ const BuyForm = forwardRef((props, _ref) => {
     setState({ ...state, returnDate: event });
   };
 
+  const handleChangeInputN = (incDec, type) => {
+    var totalPassengers = state.adultsN + state.kidsN;
+    switch (type) {
+      case "adults":
+        if (incDec === "+") {
+          if (totalPassengers < MAX_PASSENGERS)
+            setState({ ...state, adultsN: state.adultsN + 1 });
+        } else if (incDec === "-") {
+          if (state.adultsN > 0)
+            setState({ ...state, adultsN: state.adultsN - 1 });
+        }
+        break;
+      case "kids":
+        if (incDec === "+") {
+          if (totalPassengers < MAX_PASSENGERS)
+            setState({ ...state, kidsN: state.kidsN + 1 });
+        } else if (incDec === "-") {
+          if (state.kidsN > 0) setState({ ...state, kidsN: state.kidsN - 1 });
+        }
+        break;
+      default:
+        break;
+    }
+  };
+
+  const filterOptions = createFilterOptions({
+    matchFrom: "start",
+    stringify: (station) => station.name,
+    //stations.map((station) => station[1]).filter((station) => station !== arriveStation)
+  });
+
+  const swapStations = () => {
+    var tmp = startStation;
+    setState({
+      ...state,
+      startStation: arriveStation,
+      arriveStation: tmp,
+    });
+  };
+
   useImperativeHandle(_ref, () => ({
     getFormState: () => {
       return state;
     },
   }));
+
+
+  const {arriveStation, startStation} = state
+
+  const startOptionMemo = useMemo(() => {
+    if(arriveStation){
+      return internalStations.filter(
+        (station) => station.name !== arriveStation.name
+      )
+    }
+    return internalStations
+  },[arriveStation]);
+
+  const arriveOptionMemo = useMemo(() =>{
+    if(startStation){
+      return internalStations.filter(
+        (station) => station.name !== startStation.name
+      )
+    }
+    return internalStations
+  },[startStation]);
 
   const propContent = [
     {
@@ -163,15 +265,31 @@ const BuyForm = forwardRef((props, _ref) => {
               <label className={classes.inputLabel}>
                 Stazione di partenza*
               </label>
-              <input
-                className={classes.inputField}
-                name="startStation"
-                type="text"
-                placeholder="Cerca una stazione"
-                value={state.startStation}
-                onChange={handleChange}
-                onFocus={() => props.isKeyboardOpened(true)}
-                onBlur={() => props.isKeyboardOpened(false)}
+              <Autocomplete
+                freeSolo
+                disableClearable
+                value={startStation}
+                options={startOptionMemo}
+                onChange={(event, value) =>
+                  handleChangeStation(value, "startStation")
+                }
+                onInputChange={(event,value) => {
+                  if(value === null || value === "")
+                    handleChangeStation(null, "startStation")
+                }}
+                filterOptions={filterOptions}
+                getOptionLabel={(station) => station.name}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    className={classes.inputField}
+                    margin="normal"
+                    onFocus={() => props.isKeyboardOpened(true)}
+                    onBlur={() => props.isKeyboardOpened(false)}
+                    placeholder="Cerca una stazione"
+                    InputProps={{ ...params.InputProps, type: "search" }}
+                  />
+                )}
               />
             </div>
             <div className={classes.swapIcon}>
@@ -180,21 +298,38 @@ const BuyForm = forwardRef((props, _ref) => {
                 className={classes.swapIcon}
                 color="inherit"
                 aria-label="menu"
+                onClick={() => swapStations()}
               >
                 <SwapVertIcon color="#ffffff" />
               </IconButton>
             </div>
             <div className={classes.inputStation}>
               <label className={classes.inputLabel}>Stazione di arrivo*</label>
-              <input
-                className={classes.inputField}
-                name="arriveStation"
-                type="text"
-                placeholder="Cerca una stazione"
-                value={state.arriveStation}
-                onChange={handleChange}
-                onFocus={() => props.isKeyboardOpened(true)}
-                onBlur={() => props.isKeyboardOpened(false)}
+              <Autocomplete
+                freeSolo
+                disableClearable
+                value={arriveStation}
+                options={arriveOptionMemo}
+                onChange={(event, value) =>
+                  handleChangeStation(value, "arriveStation")
+                }
+                onInputChange={(event,value) => {
+                  if(value === null || value === "")
+                    handleChangeStation(null, "arriveStation")
+                }}
+                filterOptions={filterOptions}
+                getOptionLabel={(station) => station.name}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    className={classes.inputField}
+                    margin="normal"
+                    onFocus={() => props.isKeyboardOpened(true)}
+                    onBlur={() => props.isKeyboardOpened(false)}
+                    placeholder="Cerca una stazione"
+                    InputProps={{ ...params.InputProps, type: "search" }}
+                  />
+                )}
               />
             </div>
             <div className={classes.withChange}>
@@ -257,13 +392,17 @@ const BuyForm = forwardRef((props, _ref) => {
       body: (
         <>
           <Box className={classes.passengersSel}>
-            <div>
+            <div
+              className={classes.passengersBox}
+              style={{ marginRight: "100px" }}
+            >
               <label className={classes.inputLabel}>Adulti</label>
               <IconButton
                 edge="start"
                 className={classes.menuButton}
                 color="inherit"
                 aria-label="menu"
+                onClick={() => handleChangeInputN("+", "adults")}
               >
                 <AddIcon color="#ffffff" />
               </IconButton>
@@ -271,26 +410,28 @@ const BuyForm = forwardRef((props, _ref) => {
                 name="adultsN"
                 type="number"
                 value={state.adultsN}
-                onChange={handleChange}
                 className={classes.numberI}
                 required
+                readOnly
               />
               <IconButton
                 edge="start"
                 className={classes.menuButton}
                 color="inherit"
                 aria-label="menu"
+                onClick={() => handleChangeInputN("-", "adults")}
               >
                 <RemoveIcon color="#ffffff" />
               </IconButton>
             </div>
-            <div>
+            <div className={classes.passengersBox}>
               <label className={classes.inputLabel}>Ragazzi</label>
               <IconButton
                 edge="start"
                 className={classes.menuButton}
                 color="inherit"
                 aria-label="menu"
+                onClick={() => handleChangeInputN("+", "kids")}
               >
                 <AddIcon color="#ffffff" />
               </IconButton>
@@ -299,8 +440,8 @@ const BuyForm = forwardRef((props, _ref) => {
                 type="number"
                 defaultValue="0"
                 value={state.kidsN}
-                onChange={handleChange}
                 className={classes.numberI}
+                readOnly
                 required
               />
               <IconButton
@@ -308,11 +449,31 @@ const BuyForm = forwardRef((props, _ref) => {
                 className={classes.menuButton}
                 color="inherit"
                 aria-label="menu"
+                onClick={() => handleChangeInputN("-", "kids")}
               >
                 <RemoveIcon color="#ffffff" />
               </IconButton>
             </div>
           </Box>
+          <Divider
+            variant="middle"
+            className={classes.divider}
+            style={{ marginTop: "20px" }}
+          />
+          <div className={classes.cartaBox}>
+            <label className={classes.inputLabel}>CartaFreccia</label>
+            <Button
+              className={classes.paginationContent}
+              href="/"
+              component={Link}
+              onClick={(event) => {
+                event.preventDefault();
+              }}
+            >
+              Inserisci CartaFreccia
+            </Button>
+          </div>
+          <label className={classes.inputLabel}>* campi obbligatori</label>
         </>
       ),
     },

@@ -1,7 +1,7 @@
 export const initialState = { step: 0, serviceSelected: null ,isLoading: false};
 
 const reducer = (state, action) => {
-  console.log("%c Reducer state, action: ", "#367", state, action);
+  //console.log("%c Reducer state, action: ", "#367", state, action);
   switch (action.type) {
     case "INCREMENT_STEP":
       return { ...state, step: state.step + 1 };

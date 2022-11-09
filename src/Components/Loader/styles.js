@@ -1,12 +1,12 @@
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = (theme, props) => {
-    console.log("Loader->style->theme: ", theme);
+    //console.log("Loader->style->theme: ", theme);
   return {
     root: {
       "& .MuiDialog-paperWidthSm": {
         width: (props) => {
-          console.log("Loader->style->isRch: ", props);
+          //console.log("Loader->style->isRch: ", props);
           return "500px";
         },
       },
