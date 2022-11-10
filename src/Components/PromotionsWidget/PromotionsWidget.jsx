@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme, props) => {
 function PromotionsWidget({ serviceSelected, promotionsSelection }) {
   const classes = useStyles();
   const item = serviceSelected?.item;
-  const [value, setValue] = React.useState({});
+  const [value, setValue] = React.useState(promotionsSelection[0].description);
   const [sitChoice, setSitChoice] = React.useState(false);
 
   const handleChangeSwitch = (event) => {
@@ -86,7 +86,7 @@ function PromotionsWidget({ serviceSelected, promotionsSelection }) {
                   <div>{item.description}</div>
                 </Grid>
                 <Grid item xs={3}>
-                  <div>{getPriceFormat(item.price)}</div>
+                  <div>{getPriceFormat(item.price)} €</div>
                 </Grid>
               </Grid>
             );
