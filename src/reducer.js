@@ -12,7 +12,7 @@ const reducer = (state, action) => {
     case "SET_SERVICE_SELECTED":
       return { ...state, serviceSelected: action.payload.serviceSelected };
     case "SET_SEARCH_TICKET":
-      return { ...state, searchingTicket: action.payload.searchingTicket };
+      return { ...state, searchingTicket: action.payload.searchingTicket};
     case "FOCUSED":
       return { ...state, keyboardOpened: true }
     case "UNFOCUSED":
@@ -20,9 +20,11 @@ const reducer = (state, action) => {
     case "SET_SOLUTIONS":
       return { ...state,solutions: action.payload.result }
     case "SET_SOLUTION_DETAILS":
-      return { ...state,solutionDetails: action.payload.result }
+      return { ...state,solutionDetails: action.payload.result, currentPassenger: action.payload.currentPassenger  }
     case "SET_SOLUTION_RECAP":
       return { ...state,solutionRecap: action.payload.solutionRecap }
+    case "SET_NEXT_PASSENGER":
+      return { ...state,currentPassenger: state.currentPassenger + 1 }
     default:
       throw new Error();
   }

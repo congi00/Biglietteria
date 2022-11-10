@@ -9,6 +9,7 @@ import IconButton from "@material-ui/core/IconButton";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import Link from "@material-ui/core/Link";
 import Button from "@material-ui/core/Button";
+import {minutesFormat} from "../utils"
 import { useState } from "react";
 import { useEffect } from "react";
 
@@ -82,10 +83,6 @@ const useStyles = makeStyles((theme, props) => {
   };
 });
 
-const minutesFormat = (minutes) => {
-  if (minutes < 9) return minutes + "0";
-  else return minutes;
-};
 
 const getTrains = (trains) => {
   if (trains.length < 2) {
@@ -118,7 +115,6 @@ const getSaleability = (trains) => {
 };
 
 const nextPage = (paginationData) => {
-  // console.log("NextPage:", paginationData);
   return paginationData + 1;
 };
 
@@ -263,6 +259,7 @@ function FindSolution({ searchingTicket, solutions, onGoNextBuy, solutionRecap }
     };
     return structSolution;
   });
+
 
   // console.log("FindSolution -> render -> paginationData: ", paginationData);
   return (

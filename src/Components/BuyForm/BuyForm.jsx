@@ -153,16 +153,17 @@ const useStyles = makeStyles((theme, props) => {
 const MAX_PASSENGERS = 5;
 
 const BuyForm = forwardRef((props, _ref) => {
+  const {beforeCompiled} = props;
   const classes = useStyles();
   const [state, setState] = React.useState({
-    startStation: null,
-    arriveStation: null,
-    withChange: false,
-    roundtrip: false,
-    startDate: null,
-    returnDate: null,
-    adultsN: 1,
-    kidsN: 0,
+    startStation: beforeCompiled?.startStation || null,
+    arriveStation: beforeCompiled?.arriveStation || null,
+    withChange: beforeCompiled?.withChange || false,
+    roundtrip: beforeCompiled?.roundtrip || false,
+    startDate: beforeCompiled?.startDate || null,
+    returnDate: beforeCompiled?.returnDate || null,
+    adultsN: beforeCompiled?.adultsN || 1,
+    kidsN: beforeCompiled?.kidsN || 0,
   });
 
   const handleChangeStation = (value, nameState) => {

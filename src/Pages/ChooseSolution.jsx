@@ -1,13 +1,21 @@
 import React from "react";
 import StepContainer from "../Components/StepContainer/StepContainer.jsx";
+import ButtonClasses from "../Components/ButtonClasses/ButtonClasses.jsx";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "../Components/Card/Card.jsx";
 import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
 import { Box } from "@material-ui/core";
+import { getDateFormat, getStartArriveH } from "../utils";
 
 const useStyles = makeStyles((theme, props) => {
-  return {};
+  return {
+    ChooseSolution: {
+      marginBottom: "100px",
+    },
+    servicesContainer: {
+      
+    },
+  };
 });
 
 const minutesFormat = (minutes) => {
@@ -35,15 +43,35 @@ const getTrains = (trains) => {
   return trainString;
 };
 
-function ChooseSolution({ solutionDetails, solutionRecap }) {
+const getServicesAvailable = (promotions) => {
+  let servicesAvailable = [];
+  promotions.map((item) => {
+    let code = item.code.split(";")[1];
+    let description = item.description.split(" - ")[1];
+    if (servicesAvailable.map((service) => service.code).indexOf(code) === -1)
+      servicesAvailable.push({ code: code, description: description });
+  });
+
+  return servicesAvailable;
+};
+
+function ChooseSolution({
+  searchingTicket,
+  currentPassenger,
+  backTrip,
+  solutionDetails,
+  solutionRecap,
+  setNextPassenger,
+}) {
   const classes = useStyles();
-  const startTime = new Date(solutionRecap?.legs[0].startDateTime);
-  const endTime = new Date(
-    solutionRecap?.legs[solutionRecap?.legs.length - 1].endDateTime
-  );
+  const legsRecap = solutionRecap?.legs;
+  const purchasableItems = solutionDetails?.data.purchasableItems;
+  const startTime = new Date(legsRecap[0].startDateTime);
+  const endTime = new Date(legsRecap[legsRecap.length - 1].endDateTime);
+  const totalPassengers = searchingTicket.adultsN + searchingTicket.kidsN;
   const duration = solutionRecap?.journeyDuration.split(":");
-  // console.log("ChooseSolution -> render -> solutionDetails: ", solutionDetails);
-  // console.log("ChooseSolution -> render -> solutionRecap: ", solutionRecap);
+  console.log("ChooseSolution -> render -> solutionDetails: ", solutionDetails);
+  console.log("ChooseSolution -> render -> solutionRecap: ", solutionRecap);
 
   const propContent = [
     {
@@ -54,11 +82,8 @@ function ChooseSolution({ solutionDetails, solutionRecap }) {
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <h5>
-                {solutionRecap?.legs[0].startStop?.shortDescription} -{" "}
-                {
-                  solutionRecap?.legs[solutionRecap?.legs.length - 1].endStop
-                    ?.shortDescription
-                }
+                {legsRecap[0].startStop?.shortDescription} -{" "}
+                {legsRecap[legsRecap.length - 1].endStop?.shortDescription}
               </h5>
             </Grid>
             <Grid item xs={6}>
@@ -85,12 +110,12 @@ function ChooseSolution({ solutionDetails, solutionRecap }) {
             </Grid>
             <Grid item xs={3}>
               <h5>
-                Cambi: <b>{solutionRecap?.legs.length - 1}</b>
+                Cambi: <b>{legsRecap.length - 1}</b>
               </h5>
             </Grid>
             <Grid item xs={6}>
               <h5>
-                Treno: <b>{getTrains([...solutionRecap?.legs])}</b>
+                Treno: <b>{getTrains([...legsRecap])}</b>
               </h5>
             </Grid>
           </Grid>
@@ -102,25 +127,42 @@ function ChooseSolution({ solutionDetails, solutionRecap }) {
       body: (
         <div>
           <Box>
-            <h5>Passeggero 1 di 1 - Adulto</h5>
+            <h5>
+              Passeggero {currentPassenger} di {totalPassengers} - Adulto
+            </h5>
             <h5>CartaFreccia</h5>
           </Box>
-          {solutionRecap?.legs.map((leg, index) => {
+          {legsRecap.map((leg, index) => {
             return (
-              <Box>
-                <h5>
-                  Tratta {index + 1} di {solutionRecap?.legs.length}
-                </h5>
-                <h5>
-                  {leg.routeInfo.vehicleDescription +
-                    " " +
-                    leg.routeInfo.routeId}
-                </h5>
-                <h5>
-                  Da {leg.startStop.shortDescription} a{" "}
-                  {leg.endStop.shortDescription}
-                </h5>
-              </Box>
+              <>
+                <Box>
+                  <h5>
+                    Tratta {index + 1} di {legsRecap.length}
+                  </h5>
+                  <h5>
+                    {leg.routeInfo.vehicleDescription +
+                      " " +
+                      leg.routeInfo.routeId}
+                  </h5>
+                  <h5>
+                    Da {leg.startStop.shortDescription} a{" "}
+                    {leg.endStop.shortDescription}
+                  </h5>
+                  <h5>
+                    {getDateFormat(new Date(leg.startDateTime))}
+                    {"  "}
+                    {getStartArriveH(
+                      new Date(leg.startDateTime),
+                      new Date(leg.endDateTime)
+                    )}
+                  </h5>
+                </Box>
+                <Box className={classes.servicesContainer}>
+                  {getServicesAvailable(purchasableItems).map((item) => {
+                    return <ButtonClasses title={item.description} />;
+                  })}
+                </Box>
+              </>
             );
           })}
         </div>
@@ -128,10 +170,25 @@ function ChooseSolution({ solutionDetails, solutionRecap }) {
     },
   ];
 
-  console.log();
   return (
-    <div className={classes.FindSolution}>
-      <StepContainer onCancel={() => {}}>
+    <div className={classes.ChooseSolution}>
+      <StepContainer
+        onCancel={() => {}}
+        onGoOn={() => {
+          if (
+            !backTrip &&
+            searchingTicket.roundtrip &&
+            currentPassenger === totalPassengers
+          )
+            console.log("Scelta delle promozioni per il viaggio di ritorno");
+          else if (
+            !searchingTicket.roundtrip &&
+            currentPassenger === totalPassengers
+          )
+            console.log("Fine scelta promozioni");
+          else setNextPassenger();
+        }}
+      >
         <div className={classes.findSolutionContainer}>
           <Card content={propContent} />
         </div>

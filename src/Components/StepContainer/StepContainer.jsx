@@ -25,6 +25,11 @@ function StepContainer(props) {
                 Cerca
               </Button>
             )}
+            {props.onGoOn && (
+              <Button onClick={() => props.onGoOn()} variant="outlined">
+                Prosegui
+              </Button>
+            )}
           </Toolbar>
         </AppBar>
       }

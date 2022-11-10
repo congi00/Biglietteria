@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme, props) => {
   };
 });
 
-function BuyTicket({ searchingTicket, isKeyboardOpened,keyboardOpened, onGoNextBuy }) {
+function BuyTicket({ searchingTicket, beforeCompiled, isKeyboardOpened,keyboardOpened, onGoNextBuy }) {
   const classes = useStyles();
   const formEl = useRef(null);
   let errors = [
@@ -80,7 +80,7 @@ function BuyTicket({ searchingTicket, isKeyboardOpened,keyboardOpened, onGoNextB
             <h2 className={classes.infoTitle}>Scopri il servizio</h2>
           </Box>
           <Box className={classes.buyForm}>
-            <BuyForm ref={formEl} isKeyboardOpened={isKeyboardOpened}/>
+            <BuyForm ref={formEl} beforeCompiled={beforeCompiled} isKeyboardOpened={isKeyboardOpened}/>
           </Box>
         </div>
       </StepContainer>
