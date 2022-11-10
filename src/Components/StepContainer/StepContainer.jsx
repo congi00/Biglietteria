@@ -12,7 +12,7 @@ function StepContainer(props) {
   return (
     <div>
       <div>{props.children}</div>
-      { !props.keyboardOpened &&
+      {!props.keyboardOpened && (
         <AppBar position="fixed" color="#ffffff" className={classes.appBar}>
           <Toolbar>
             {props.onCancel && (
@@ -32,7 +32,7 @@ function StepContainer(props) {
             )}
           </Toolbar>
         </AppBar>
-      }
+      )}
     </div>
   );
 }

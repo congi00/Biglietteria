@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme, props) => {
       alignItems: "center",
       padding: "0px 0px 32px",
       gap: "32px",
-      marginTop: "30px"
+      marginTop: "30px",
     },
     cardTitleBox: {
       width: "100%",
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme, props) => {
       display: "flex",
       flexWrap: "wrap",
       alignSelf: "start",
-      textAlign: "center"
+      textAlign: "center",
     },
     cardButton: {
       backgroundColor: "#4F4F4F",

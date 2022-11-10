@@ -1,4 +1,4 @@
-import React, { forwardRef , useMemo} from "react";
+import React, { forwardRef, useMemo } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import ButtonForm from "../../Components/ButtonForm/ButtonForm.jsx";
 import FavoriteIcon from "@material-ui/icons/Favorite";
@@ -11,10 +11,7 @@ import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
 import TextField from "@material-ui/core/TextField";
-import {
-  MuiPickersUtilsProvider,
-  DateTimePicker,
-} from "@material-ui/pickers";
+import { MuiPickersUtilsProvider, DateTimePicker } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns"; // choose your lib
 import { it } from "date-fns/locale";
 import { useImperativeHandle } from "react";
@@ -153,7 +150,7 @@ const useStyles = makeStyles((theme, props) => {
 const MAX_PASSENGERS = 5;
 
 const BuyForm = forwardRef((props, _ref) => {
-  const {beforeCompiled} = props;
+  const { beforeCompiled } = props;
   const classes = useStyles();
   const [state, setState] = React.useState({
     startStation: beforeCompiled?.startStation || null,
@@ -227,26 +224,25 @@ const BuyForm = forwardRef((props, _ref) => {
     },
   }));
 
-
-  const {arriveStation, startStation} = state
+  const { arriveStation, startStation } = state;
 
   const startOptionMemo = useMemo(() => {
-    if(arriveStation){
+    if (arriveStation) {
       return internalStations.filter(
         (station) => station.name !== arriveStation.name
-      )
+      );
     }
-    return internalStations
-  },[arriveStation]);
+    return internalStations;
+  }, [arriveStation]);
 
-  const arriveOptionMemo = useMemo(() =>{
-    if(startStation){
+  const arriveOptionMemo = useMemo(() => {
+    if (startStation) {
       return internalStations.filter(
         (station) => station.name !== startStation.name
-      )
+      );
     }
-    return internalStations
-  },[startStation]);
+    return internalStations;
+  }, [startStation]);
 
   const propContent = [
     {
@@ -273,9 +269,9 @@ const BuyForm = forwardRef((props, _ref) => {
                 onChange={(event, value) =>
                   handleChangeStation(value, "startStation")
                 }
-                onInputChange={(event,value) => {
-                  if(value === null || value === "")
-                    handleChangeStation(null, "startStation")
+                onInputChange={(event, value) => {
+                  if (value === null || value === "")
+                    handleChangeStation(null, "startStation");
                 }}
                 filterOptions={filterOptions}
                 getOptionLabel={(station) => station.name}
@@ -313,9 +309,9 @@ const BuyForm = forwardRef((props, _ref) => {
                 onChange={(event, value) =>
                   handleChangeStation(value, "arriveStation")
                 }
-                onInputChange={(event,value) => {
-                  if(value === null || value === "")
-                    handleChangeStation(null, "arriveStation")
+                onInputChange={(event, value) => {
+                  if (value === null || value === "")
+                    handleChangeStation(null, "arriveStation");
                 }}
                 filterOptions={filterOptions}
                 getOptionLabel={(station) => station.name}
@@ -362,7 +358,7 @@ const BuyForm = forwardRef((props, _ref) => {
 
           <label className={classes.inputLabel}>Data e orario andata*</label>
           <MuiPickersUtilsProvider utils={DateFnsUtils} locale={it}>
-            <DateTimePicker 
+            <DateTimePicker
               name="startDate"
               label="GG/MM/AAAA HH:MM"
               inputVariant="outlined"
@@ -373,7 +369,7 @@ const BuyForm = forwardRef((props, _ref) => {
           </MuiPickersUtilsProvider>
           <label className={classes.inputLabel}>Data e orario ritorno*</label>
           <MuiPickersUtilsProvider utils={DateFnsUtils} locale={it}>
-            <DateTimePicker 
+            <DateTimePicker
               name="returnDate"
               label="GG/MM/AAAA HH:MM"
               inputVariant="outlined"

@@ -5,6 +5,9 @@ import PromotionsWidget from "../Components/PromotionsWidget/PromotionsWidget.js
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "../Components/Card/Card.jsx";
 import Grid from "@material-ui/core/Grid";
+import Link from "@material-ui/core/Link";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
 import { Box } from "@material-ui/core";
 import {
   getDateFormat,
@@ -16,12 +19,40 @@ import { useState } from "react";
 
 const useStyles = makeStyles((theme, props) => {
   return {
+    root: {
+      color: "#fff",
+    },
     ChooseSolution: {
       marginBottom: "100px",
+    },
+    chooseSolutionContainer: {
+      paddingTop: "20px",
+      backgroundColor: "#008100",
+      width: "100%",
+      display: "flex",
+      alignItems: "center",
+      flexDirection: "column",
     },
     servicesContainer: {
       display: "flex",
       backgroundColor: "#EDEEEF",
+      height: "150px",
+      padding: "35px 0",
+    },
+    passengerBox: {
+      width: "80vw",
+      border: "1px solid #fff",
+    },
+    infosRoute: {
+      color: "#fff",
+      padding: "0 0 20px 40px",
+    },
+    passengerInfos: {
+      color: "#fff",
+      padding: "20px 0 20px 40px",
+    },
+    linkContent: {
+      color: "yellow",
     },
   };
 });
@@ -75,12 +106,17 @@ const getPromotions = (code, promotions, passType) => {
       promotionsAvailable.push({
         description: item.description.split(" - ")[0],
         availability: item.maxQtyAllowed > 1,
-        price: passType === "adult" ? item.customDataField.adultAmount : item.customDataField.childAmount
+        price:
+          passType === "adult"
+            ? item.customDataField.adultAmount
+            : item.customDataField.childAmount,
       });
   });
 
-  
-  console.log("ChooseSolution -> getPromotions -> promotionsAvailable",promotionsAvailable)
+  console.log(
+    "ChooseSolution -> getPromotions -> promotionsAvailable",
+    promotionsAvailable
+  );
   return promotionsAvailable;
 };
 
@@ -100,10 +136,15 @@ function ChooseSolution({
   const totalPassengers = searchingTicket.adultsN + searchingTicket.kidsN;
   const duration = solutionRecap?.journeyDuration.split(":");
   const servicesAvailable = getServicesAvailable(purchasableItems);
-  const [serviceSelected, setServiceSelected] = useState([]);
+  const [serviceSelected, setServiceSelected] = useState(
+    legsRecap.map(leg => {
+      return {item: servicesAvailable[0]}
+    })
+  );
   console.log("ChooseSolution -> render -> solutionDetails: ", solutionDetails);
   console.log("ChooseSolution -> render -> solutionRecap: ", solutionRecap);
   console.log("ChooseSolution -> render -> serviceSelected: ", serviceSelected);
+  console.log("ChooseSolution -> render -> servicesAvailable[0]: ", servicesAvailable[0]);
 
   const propContent = [
     {
@@ -113,36 +154,36 @@ function ChooseSolution({
         <div className={classes.root}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
-              <h5>
+              <Typography variant="h5">
                 {legsRecap[0].startStop?.shortDescription} -{" "}
                 {legsRecap[legsRecap.length - 1].endStop?.shortDescription}
-              </h5>
+              </Typography>
             </Grid>
             <Grid item xs={6}>
-              <h5>
+              <Typography variant="h5">
                 {startTime.getHours()}:{minutesFormat(startTime.getMinutes())} -{" "}
                 {endTime.getHours()}:{minutesFormat(endTime.getMinutes())}
-              </h5>
+              </Typography>
             </Grid>
             <Grid item xs={3}>
-              <h5>
+              <Typography variant="h5">
                 da <b>{getPriceFormat(solutionRecap?.price)} €</b>
-              </h5>
+              </Typography>
             </Grid>
             <Grid item xs={12}>
-              <h5>
+              <Typography variant="h5">
                 {parseInt(duration[0])}h {duration[1]}min
-              </h5>
+              </Typography>
             </Grid>
             <Grid item xs={3}>
-              <h5>
+              <Typography variant="h5">
                 Cambi: <b>{legsRecap.length - 1}</b>
-              </h5>
+              </Typography>
             </Grid>
             <Grid item xs={6}>
-              <h5>
+              <Typography variant="h5">
                 Treno: <b>{getTrains([...legsRecap])}</b>
-              </h5>
+              </Typography>
             </Grid>
           </Grid>
         </div>
@@ -171,40 +212,71 @@ function ChooseSolution({
           else setNextPassenger("kids");
         }}
       >
-        <div className={classes.findSolutionContainer}>
+        <div className={classes.chooseSolutionContainer}>
           <Card content={propContent} />
-          <div>
-            <Box>
-              <h5>
-                Passeggero {currentPassenger.index} di {totalPassengers} -{" "}
-                {currentPassenger.passType === "adult" ? "Adulto" : "Ragazzo"}
-              </h5>
-              <h5>CartaFreccia</h5>
-            </Box>
+          <div className={classes.passengerBox}>
+            <Grid container spacing={3} className={classes.passengerInfos}>
+              <Grid item xs={12}>
+                <Typography variant="h5">
+                  Passeggero {currentPassenger.index} di {totalPassengers} -{" "}
+                  {currentPassenger.passType === "adult" ? "Adulto" : "Ragazzo"}
+                </Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <Typography variant="h5">CartaFreccia</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Button
+                  className={classes.linkContent}
+                  href="/"
+                  component={Link}
+                  onClick={(event) => {
+                    event.preventDefault();
+                  }}
+                >
+                  Inserisci CartaFreccia
+                </Button>
+              </Grid>
+            </Grid>
             {legsRecap.map((leg, index) => {
               return (
                 <>
-                  <Box>
-                    <h5>
-                      Tratta {index + 1} di {legsRecap.length}
-                    </h5>
-                    <h5>
-                      {leg.routeInfo.vehicleDescription +
-                        " " +
-                        leg.routeInfo.routeId}
-                    </h5>
-                    <h5>
-                      Da {leg.startStop.shortDescription} a{" "}
-                      {leg.endStop.shortDescription}
-                    </h5>
-                    <h5>
-                      {getDateFormat(new Date(leg.startDateTime))}
-                      {"  "}
-                      {getStartArriveH(
-                        new Date(leg.startDateTime),
-                        new Date(leg.endDateTime)
-                      )}
-                    </h5>
+                  <Box className={classes.infosRoute}>
+                    <Grid
+                      container
+                      spacing={3}
+                    >
+                      <Grid item xs={12}>
+                        <Typography variant="h5">
+                          Tratta {index + 1} di {legsRecap.length}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography variant="h5">
+                          {leg.routeInfo.vehicleDescription +
+                            " " +
+                            leg.routeInfo.routeId}
+                        </Typography>
+                      </Grid>
+
+                      <Grid item xs={12}>
+                        <Typography variant="h5">
+                          Da {leg.startStop.shortDescription} a{" "}
+                          {leg.endStop.shortDescription}
+                        </Typography>
+                      </Grid>
+
+                      <Grid item xs={12}>
+                        <Typography variant="h5">
+                          {getDateFormat(new Date(leg.startDateTime))}
+                          {"  "}
+                          {getStartArriveH(
+                            new Date(leg.startDateTime),
+                            new Date(leg.endDateTime)
+                          )}
+                        </Typography>
+                      </Grid>
+                    </Grid>
                   </Box>
                   <Box className={classes.servicesContainer}>
                     {servicesAvailable.map((item) => {
@@ -219,7 +291,10 @@ function ChooseSolution({
                             setServiceSelected(serviceUpdate);
                           }}
                         >
-                          <ButtonClasses item={item} />
+                          <ButtonClasses
+                            item={item}
+                            codeSelected={serviceSelected[index]?.item?.code}
+                          />
                         </div>
                       );
                     })}

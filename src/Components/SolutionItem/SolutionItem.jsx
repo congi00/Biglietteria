@@ -12,7 +12,9 @@ function SolutionItem({ content }) {
           {sections.title && (
             <div className={classes.cardHeader}>{sections.title}</div>
           )}
-          {sections.body && <div className={classes.cardBody}>{sections.body}</div>}
+          {sections.body && (
+            <div className={classes.cardBody}>{sections.body}</div>
+          )}
         </div>
       ))}
     </>

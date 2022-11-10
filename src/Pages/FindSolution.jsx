@@ -9,7 +9,7 @@ import IconButton from "@material-ui/core/IconButton";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import Link from "@material-ui/core/Link";
 import Button from "@material-ui/core/Button";
-import {minutesFormat, getPriceFormat} from "../utils"
+import { minutesFormat, getPriceFormat } from "../utils";
 import { useState } from "react";
 import { useEffect } from "react";
 
@@ -83,7 +83,6 @@ const useStyles = makeStyles((theme, props) => {
   };
 });
 
-
 const getTrains = (trains) => {
   if (trains.length < 2) {
     return trains[0].routeInfo.vehicleDescription;
@@ -135,7 +134,12 @@ const getTotalPage = (solutions) => {
  * @returns
  */
 
-function FindSolution({ searchingTicket, solutions, onGoNextBuy, solutionRecap }) {
+function FindSolution({
+  searchingTicket,
+  solutions,
+  onGoNextBuy,
+  solutionRecap,
+}) {
   const classes = useStyles();
   const [paginationData, setPaginationData] = useState({
     totalPage: 0,
@@ -211,11 +215,7 @@ function FindSolution({ searchingTicket, solutions, onGoNextBuy, solutionRecap }
             </h5>
             {saleability ? (
               <h5 className={classes.thinClass + " " + classes.solutionText}>
-                da{" "}
-                <b>
-                  {getPriceFormat(solution?.price)}{" "}
-                  €
-                </b>
+                da <b>{getPriceFormat(solution?.price)} €</b>
               </h5>
             ) : (
               <h5 className={classes.thinClass + " " + classes.solutionText}>
@@ -237,7 +237,7 @@ function FindSolution({ searchingTicket, solutions, onGoNextBuy, solutionRecap }
               disabled={!saleability}
               onClick={() => {
                 onGoNextBuy("getInfo");
-                solutionRecap(solution)
+                solutionRecap(solution);
               }}
             >
               <ArrowForwardIosIcon color="#ffffff" />
@@ -257,7 +257,6 @@ function FindSolution({ searchingTicket, solutions, onGoNextBuy, solutionRecap }
     };
     return structSolution;
   });
-
 
   // console.log("FindSolution -> render -> paginationData: ", paginationData);
   return (
@@ -285,7 +284,7 @@ function FindSolution({ searchingTicket, solutions, onGoNextBuy, solutionRecap }
                     setAvailableSolution(!availableSolution);
                     setPaginationData({
                       totalPage: getTotalPage(solutionViewed || []),
-                      currentPage: 0
+                      currentPage: 0,
                     });
                   }}
                 />

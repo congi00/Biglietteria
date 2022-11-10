@@ -9,8 +9,8 @@ import BuyForm from "../Components/BuyForm/BuyForm.jsx";
 
 const useStyles = makeStyles((theme, props) => {
   return {
-    BuyTicket:{
-        marginBottom: "64px"
+    BuyTicket: {
+      marginBottom: "64px",
     },
     BuyTicketContainer: {
       backgroundColor: "#008100",
@@ -36,11 +36,17 @@ const useStyles = makeStyles((theme, props) => {
       gap: "32px",
       width: "90vw",
       margin: "10px 5vw 0 5vw ",
-    }
+    },
   };
 });
 
-function BuyTicket({ searchingTicket, beforeCompiled, isKeyboardOpened,keyboardOpened, onGoNextBuy }) {
+function BuyTicket({
+  searchingTicket,
+  beforeCompiled,
+  isKeyboardOpened,
+  keyboardOpened,
+  onGoNextBuy,
+}) {
   const classes = useStyles();
   const formEl = useRef(null);
   let errors = [
@@ -57,9 +63,10 @@ function BuyTicket({ searchingTicket, beforeCompiled, isKeyboardOpened,keyboardO
         onSearch={() => {
           const formState = formEl?.current?.getFormState();
           if (!formState.startStation) alert(errors[0]);
-          else if(!formState.arriveStation) alert(errors[1]);
-          else if(!formState.startDate) alert(errors[2]);
-          else if(formState.roundtrip && !formState.returnDate) alert(errors[3])
+          else if (!formState.arriveStation) alert(errors[1]);
+          else if (!formState.startDate) alert(errors[2]);
+          else if (formState.roundtrip && !formState.returnDate)
+            alert(errors[3]);
           else {
             onGoNextBuy("getSolution");
             searchingTicket(formState);
@@ -80,7 +87,11 @@ function BuyTicket({ searchingTicket, beforeCompiled, isKeyboardOpened,keyboardO
             <h2 className={classes.infoTitle}>Scopri il servizio</h2>
           </Box>
           <Box className={classes.buyForm}>
-            <BuyForm ref={formEl} beforeCompiled={beforeCompiled} isKeyboardOpened={isKeyboardOpened}/>
+            <BuyForm
+              ref={formEl}
+              beforeCompiled={beforeCompiled}
+              isKeyboardOpened={isKeyboardOpened}
+            />
           </Box>
         </div>
       </StepContainer>

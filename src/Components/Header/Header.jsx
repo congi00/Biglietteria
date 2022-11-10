@@ -7,7 +7,7 @@ import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import Box from "@material-ui/core/Box";
 
-function Header({decrementStep}) {
+function Header({ decrementStep }) {
   const classes = useStyles();
 
   return (
@@ -21,7 +21,7 @@ function Header({decrementStep}) {
               color="inherit"
               aria-label="menu"
             >
-              <ArrowBackIcon onClick={()=>decrementStep()}/>
+              <ArrowBackIcon onClick={() => decrementStep()} />
             </IconButton>
           </Box>
           <Box>

@@ -1,34 +1,38 @@
 import React from "react";
 import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from '@material-ui/core/Typography';
-import {getPriceFormat} from "../../utils";
+import Typography from "@material-ui/core/Typography";
+import { getPriceFormat } from "../../utils";
 
 const useStyles = makeStyles((theme, props) => {
-    return {
-      formButton: {
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "12px 44px",
-        backgroundColor: "#FFFFFF",
-        border: "4px solid #008100",
-        borderRadius: "100px",
-      }
-    };
-  });
+  return {
+    formButton: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      padding: "12px 44px",
+      backgroundColor: "#FFFFFF",
+      border: "4px solid #D7DADD",
+      borderRadius: "100px",
+      marginLeft:"35px",
+      cursor: "pointer"
+    },
+    //#008100
+    
+  };
+});
 
 function ButtonClasses(props) {
   const classes = useStyles();
 
-  console.log(props)
   return (
-    
-      <div className={classes.formButton}>
-        <Typography variant="h5">{props.item.description}</Typography>
-        <Typography variant="h5">da {getPriceFormat(props.item.price)}€</Typography>
-      </div>
+    <div className={classes.formButton} style={{borderColor: props.codeSelected === props.item.code? "#008100" : "#D7DADD"}}>
+      <Typography variant="h5">{props.item.description}</Typography>
+      <Typography variant="h5">
+        da {getPriceFormat(props.item.price)}€
+      </Typography>
+    </div>
   );
 }
 

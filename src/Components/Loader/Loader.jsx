@@ -8,7 +8,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 function Loader() {
-  const classes = useStyles({isRch: false});
+  const classes = useStyles({ isRch: false });
 
   return (
     <Dialog
@@ -17,16 +17,15 @@ function Loader() {
       aria-describedby="alert-dialog-description"
       className={classes.root}
     >
-        <DialogTitle className={classes.loaderTitle}>
+      <DialogTitle className={classes.loaderTitle}>
         {"RICERCA IN CORSO"}
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-            <Box className={classes.loaderBody} >
-                <CircularProgress disableShrink />
-                <h5>Attendere</h5>
-            </Box>
-          
+          <Box className={classes.loaderBody}>
+            <CircularProgress disableShrink />
+            <h5>Attendere</h5>
+          </Box>
         </DialogContentText>
       </DialogContent>
     </Dialog>
