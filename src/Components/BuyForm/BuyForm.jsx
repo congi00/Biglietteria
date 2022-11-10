@@ -13,7 +13,7 @@ import Link from "@material-ui/core/Link";
 import TextField from "@material-ui/core/TextField";
 import {
   MuiPickersUtilsProvider,
-  KeyboardDatePicker,
+  DateTimePicker,
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns"; // choose your lib
 import { it } from "date-fns/locale";
@@ -363,9 +363,9 @@ const BuyForm = forwardRef((props, _ref) => {
 
           <label className={classes.inputLabel}>Data e orario andata*</label>
           <MuiPickersUtilsProvider utils={DateFnsUtils} locale={it}>
-            <KeyboardDatePicker
+            <DateTimePicker 
               name="startDate"
-              label="GG/MM/AAAA"
+              label="GG/MM/AAAA HH:MM"
               inputVariant="outlined"
               value={state.startDate}
               onChange={handleChangeStart}
@@ -374,9 +374,9 @@ const BuyForm = forwardRef((props, _ref) => {
           </MuiPickersUtilsProvider>
           <label className={classes.inputLabel}>Data e orario ritorno*</label>
           <MuiPickersUtilsProvider utils={DateFnsUtils} locale={it}>
-            <KeyboardDatePicker
+            <DateTimePicker 
               name="returnDate"
-              label="GG/MM/AAAA"
+              label="GG/MM/AAAA HH:MM"
               inputVariant="outlined"
               value={state.returnDate}
               onChange={handleChangeReturn}
