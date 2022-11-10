@@ -6,7 +6,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import Card from "../Components/Card/Card.jsx";
 import Grid from "@material-ui/core/Grid";
 import { Box } from "@material-ui/core";
-import { getDateFormat, minutesFormat,getStartArriveH, getPriceFormat} from "../utils";
+import {
+  getDateFormat,
+  minutesFormat,
+  getStartArriveH,
+  getPriceFormat,
+} from "../utils";
 import { useState } from "react";
 
 const useStyles = makeStyles((theme, props) => {
@@ -16,11 +21,10 @@ const useStyles = makeStyles((theme, props) => {
     },
     servicesContainer: {
       display: "flex",
-      backgroundColor: "#EDEEEF"
+      backgroundColor: "#EDEEEF",
     },
   };
 });
-
 
 const getTrains = (trains) => {
   if (trains.length < 2) {
@@ -47,36 +51,38 @@ const getServicesAvailable = (promotions) => {
   promotions.map((item) => {
     let code = item.code.split(";")[1];
     let description = item.description.split(" - ")[1];
-    let indexOfService = servicesAvailable.map((service) => service.code).indexOf(code)
+    let indexOfService = servicesAvailable
+      .map((service) => service.code)
+      .indexOf(code);
     if (indexOfService === -1)
-      servicesAvailable.push({ code: code, description: description, price: item.amount});
-    else if(servicesAvailable[indexOfService].price > item.amount)
-      servicesAvailable[indexOfService].price = item.amount
+      servicesAvailable.push({
+        code: code,
+        description: description,
+        price: item.amount,
+      });
+    else if (servicesAvailable[indexOfService].price > item.amount)
+      servicesAvailable[indexOfService].price = item.amount;
   });
 
   return servicesAvailable;
 };
 
-
-const getPromotions = (code,promotions) => {
+const getPromotions = (code, promotions, passType) => {
   let promotionsAvailable = [];
   promotions.map((item) => {
-    let compareCode = item.code.split(";")[1]
-    let codeProm = item.code.split(";")[0]
-
-    if(compareCode === code)
+    let compareCode = item.code.split(";")[1];
+    if (compareCode === code)
       promotionsAvailable.push({
-          description: item.description.split(" - ")[1],
-          availability: item.maxQtyAllowed > 1,
+        description: item.description.split(" - ")[0],
+        availability: item.maxQtyAllowed > 1,
+        price: passType === "adult" ? item.customDataField.adultAmount : item.customDataField.childAmount
+      });
+  });
 
-      })
-
-  })
-}
-
-
-
-
+  
+  console.log("ChooseSolution -> getPromotions -> promotionsAvailable",promotionsAvailable)
+  return promotionsAvailable;
+};
 
 function ChooseSolution({
   searchingTicket,
@@ -94,11 +100,10 @@ function ChooseSolution({
   const totalPassengers = searchingTicket.adultsN + searchingTicket.kidsN;
   const duration = solutionRecap?.journeyDuration.split(":");
   const servicesAvailable = getServicesAvailable(purchasableItems);
-  const [serviceSelected,setServiceSelected] = useState([]);
+  const [serviceSelected, setServiceSelected] = useState([]);
   console.log("ChooseSolution -> render -> solutionDetails: ", solutionDetails);
   console.log("ChooseSolution -> render -> solutionRecap: ", solutionRecap);
   console.log("ChooseSolution -> render -> serviceSelected: ", serviceSelected);
-
 
   const propContent = [
     {
@@ -121,11 +126,7 @@ function ChooseSolution({
             </Grid>
             <Grid item xs={3}>
               <h5>
-                da{" "}
-                <b>
-                  {getPriceFormat(solutionRecap?.price)}{" "}
-                  €
-                </b>
+                da <b>{getPriceFormat(solutionRecap?.price)} €</b>
               </h5>
             </Grid>
             <Grid item xs={12}>
@@ -146,7 +147,7 @@ function ChooseSolution({
           </Grid>
         </div>
       ),
-    }
+    },
   ];
 
   return (
@@ -165,66 +166,78 @@ function ChooseSolution({
             currentPassenger.index === totalPassengers
           )
             console.log("Fine scelta promozioni");
-          else if(currentPassenger.index < searchingTicket.adultsN)
-            setNextPassenger("adult")
-          else 
-              setNextPassenger("kids")
+          else if (currentPassenger.index < searchingTicket.adultsN)
+            setNextPassenger("adult");
+          else setNextPassenger("kids");
         }}
       >
         <div className={classes.findSolutionContainer}>
           <Card content={propContent} />
           <div>
-          <Box>
-            <h5>
-              Passeggero {currentPassenger.index} di {totalPassengers} - {(currentPassenger.passType === "adult")? "Adulto" : "Ragazzo" }
-            </h5>
-            <h5>CartaFreccia</h5>
-          </Box>
-          {legsRecap.map((leg, index) => {
-            return (
-              <>
-                <Box>
-                  <h5>
-                    Tratta {index + 1} di {legsRecap.length}
-                  </h5>
-                  <h5>
-                    {leg.routeInfo.vehicleDescription +
-                      " " +
-                      leg.routeInfo.routeId}
-                  </h5>
-                  <h5>
-                    Da {leg.startStop.shortDescription} a{" "}
-                    {leg.endStop.shortDescription}
-                  </h5>
-                  <h5>
-                    {getDateFormat(new Date(leg.startDateTime))}
-                    {"  "}
-                    {getStartArriveH(
-                      new Date(leg.startDateTime),
-                      new Date(leg.endDateTime)
-                    )}
-                  </h5>
-                </Box>
-                <Box className={classes.servicesContainer}>
-                  {servicesAvailable.map((item) => {
-                    return (
-                      
-                    <div onClick={()=> {
-                      let serviceUpdate = [...serviceSelected]
-                      serviceUpdate[index] = {...serviceUpdate[index], item: item}
-                      setServiceSelected(serviceUpdate)
-                      }}>
-                      <ButtonClasses item={item} />
-                    </div>);
-                  })}
-                </Box>
-                <Box>
-                  <PromotionsWidget serviceSelected={serviceSelected[index]} promotionsServiceSelected={getPromotions(serviceSelected[index]?.code,purchasableItems)} />  
-                </Box>
-              </>
-            );
-          })}
-        </div>
+            <Box>
+              <h5>
+                Passeggero {currentPassenger.index} di {totalPassengers} -{" "}
+                {currentPassenger.passType === "adult" ? "Adulto" : "Ragazzo"}
+              </h5>
+              <h5>CartaFreccia</h5>
+            </Box>
+            {legsRecap.map((leg, index) => {
+              return (
+                <>
+                  <Box>
+                    <h5>
+                      Tratta {index + 1} di {legsRecap.length}
+                    </h5>
+                    <h5>
+                      {leg.routeInfo.vehicleDescription +
+                        " " +
+                        leg.routeInfo.routeId}
+                    </h5>
+                    <h5>
+                      Da {leg.startStop.shortDescription} a{" "}
+                      {leg.endStop.shortDescription}
+                    </h5>
+                    <h5>
+                      {getDateFormat(new Date(leg.startDateTime))}
+                      {"  "}
+                      {getStartArriveH(
+                        new Date(leg.startDateTime),
+                        new Date(leg.endDateTime)
+                      )}
+                    </h5>
+                  </Box>
+                  <Box className={classes.servicesContainer}>
+                    {servicesAvailable.map((item) => {
+                      return (
+                        <div
+                          onClick={() => {
+                            let serviceUpdate = [...serviceSelected];
+                            serviceUpdate[index] = {
+                              ...serviceUpdate[index],
+                              item: item,
+                            };
+                            setServiceSelected(serviceUpdate);
+                          }}
+                        >
+                          <ButtonClasses item={item} />
+                        </div>
+                      );
+                    })}
+                  </Box>
+                  <Box>
+                    <PromotionsWidget
+                      serviceSelected={serviceSelected[index]}
+                      promotionsSelection={getPromotions(
+                        serviceSelected[index]?.item.code,
+                        purchasableItems,
+                        currentPassenger.passType
+                      )}
+                    />
+                  </Box>
+                </>
+              );
+            })}
+          </div>
         </div>
       </StepContainer>
     </div>
