@@ -11,4 +11,6 @@ export const getStartArriveH = (dateS,dateA) => {
     return dateS.getHours()+":"+minutesFormat(dateS.getMinutes()) + " - " + dateA.getHours()+":"+minutesFormat(dateA.getMinutes())
 }
 
-
+export const getPriceFormat = (price) => {
+    return (parseFloat(price) / 100).toFixed(2).replace(".", ",")
+}

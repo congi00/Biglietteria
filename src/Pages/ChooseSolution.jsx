@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Card from "../Components/Card/Card.jsx";
 import Grid from "@material-ui/core/Grid";
 import { Box } from "@material-ui/core";
-import { getDateFormat, getStartArriveH } from "../utils";
+import { getDateFormat, minutesFormat,getStartArriveH, getPriceFormat} from "../utils";
 
 const useStyles = makeStyles((theme, props) => {
   return {
@@ -13,15 +13,12 @@ const useStyles = makeStyles((theme, props) => {
       marginBottom: "100px",
     },
     servicesContainer: {
-      
+      display: "flex",
+      backgroundColor: "#EDEEEF"
     },
   };
 });
 
-const minutesFormat = (minutes) => {
-  if (minutes < 9) return minutes + "0";
-  else return minutes;
-};
 
 const getTrains = (trains) => {
   if (trains.length < 2) {
@@ -48,8 +45,11 @@ const getServicesAvailable = (promotions) => {
   promotions.map((item) => {
     let code = item.code.split(";")[1];
     let description = item.description.split(" - ")[1];
-    if (servicesAvailable.map((service) => service.code).indexOf(code) === -1)
-      servicesAvailable.push({ code: code, description: description });
+    let indexOfService = servicesAvailable.map((service) => service.code).indexOf(code)
+    if (indexOfService === -1)
+      servicesAvailable.push({ code: code, description: description, price: item.amount});
+    else if(servicesAvailable[indexOfService].price > item.amount)
+      servicesAvailable[indexOfService].price = item.amount
   });
 
   return servicesAvailable;
@@ -96,9 +96,7 @@ function ChooseSolution({
               <h5>
                 da{" "}
                 <b>
-                  {(parseFloat(solutionRecap?.price) / 100)
-                    .toFixed(2)
-                    .replace(".", ",")}{" "}
+                  {getPriceFormat(solutionRecap?.price)}{" "}
                   €
                 </b>
               </h5>
@@ -159,7 +157,7 @@ function ChooseSolution({
                 </Box>
                 <Box className={classes.servicesContainer}>
                   {getServicesAvailable(purchasableItems).map((item) => {
-                    return <ButtonClasses title={item.description} />;
+                    return <ButtonClasses title={item.description} price={item.price}/>;
                   })}
                 </Box>
               </>

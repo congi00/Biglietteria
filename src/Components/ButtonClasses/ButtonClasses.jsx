@@ -2,17 +2,19 @@ import React from "react";
 import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from '@material-ui/core/Typography';
+import {getPriceFormat} from "../../utils";
 
 const useStyles = makeStyles((theme, props) => {
     return {
       formButton: {
-          backgroundColor: "#4F4F4F",
-          color: "#fff",
-          width: "243px",
-          height: "96px",
-          margin: "10px",
-          boxShadow:" 0px 4px 12px rgba(79, 79, 79, 0.5), inset 0px 2px 1px rgba(121, 121, 121, 0.5), inset 0px -2px 1px rgba(145, 156, 167, 0.7)",
-          fontSize: "16px"
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "12px 44px",
+        backgroundColor: "#FFFFFF",
+        border: "4px solid #008100",
+        borderRadius: "100px",
       }
     };
   });
@@ -32,6 +34,7 @@ function ButtonClasses(props) {
           {props.icon}
         </IconButton>
         <Typography variant="h5">{props.title}</Typography>
+        <Typography variant="h5">da {getPriceFormat(props.price)}€</Typography>
       </div>
   );
 }

@@ -9,7 +9,7 @@ import IconButton from "@material-ui/core/IconButton";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import Link from "@material-ui/core/Link";
 import Button from "@material-ui/core/Button";
-import {minutesFormat} from "../utils"
+import {minutesFormat, getPriceFormat} from "../utils"
 import { useState } from "react";
 import { useEffect } from "react";
 
@@ -213,9 +213,7 @@ function FindSolution({ searchingTicket, solutions, onGoNextBuy, solutionRecap }
               <h5 className={classes.thinClass + " " + classes.solutionText}>
                 da{" "}
                 <b>
-                  {(parseFloat(solution?.price) / 100)
-                    .toFixed(2)
-                    .replace(".", ",")}{" "}
+                  {getPriceFormat(solution?.price)}{" "}
                   €
                 </b>
               </h5>
