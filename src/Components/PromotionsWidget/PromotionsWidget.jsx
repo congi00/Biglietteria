@@ -29,6 +29,12 @@ const useStyles = makeStyles((theme, props) => {
       width: "100%",
       color: "#fff",
     },
+    opacityOn: {
+        opacity: "0.5",
+      },
+      opacityOff: {
+        opacity: "1",
+      },
   };
 });
 
@@ -64,7 +70,7 @@ function PromotionsWidget({ serviceSelected, promotionsSelection }) {
         </Grid>
       </div>
       <FormControl style={{width:"100%"}}>
-        <RadioGroup value={value} onChange={handleChange}>
+        <RadioGroup value={value} onChange={handleChange} >
           {promotionsSelection.map((item) => {
             return (
               <Grid
@@ -80,12 +86,15 @@ function PromotionsWidget({ serviceSelected, promotionsSelection }) {
                   <FormControlLabel
                     value={item.description}
                     control={<Radio />}
+                    disabled={!item.availability}
                   />
                 </Grid>
-                <Grid item xs={8}>
+                <Grid item xs={8}
+                className={item.availability? classes.opacityOff : classes.opacityOn}>
                   <div>{item.description}</div>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={3}
+                className={item.availability? classes.opacityOff : classes.opacityOn}>
                   <div>{getPriceFormat(item.price)} €</div>
                 </Grid>
               </Grid>
