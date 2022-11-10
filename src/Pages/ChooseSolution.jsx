@@ -1,11 +1,13 @@
 import React from "react";
 import StepContainer from "../Components/StepContainer/StepContainer.jsx";
 import ButtonClasses from "../Components/ButtonClasses/ButtonClasses.jsx";
+import PromotionsWidget from "../Components/PromotionsWidget/PromotionsWidget.jsx";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "../Components/Card/Card.jsx";
 import Grid from "@material-ui/core/Grid";
 import { Box } from "@material-ui/core";
 import { getDateFormat, minutesFormat,getStartArriveH, getPriceFormat} from "../utils";
+import { useState } from "react";
 
 const useStyles = makeStyles((theme, props) => {
   return {
@@ -55,6 +57,27 @@ const getServicesAvailable = (promotions) => {
   return servicesAvailable;
 };
 
+
+const getPromotions = (code,promotions) => {
+  let promotionsAvailable = [];
+  promotions.map((item) => {
+    let compareCode = item.code.split(";")[1]
+    let codeProm = item.code.split(";")[0]
+
+    if(compareCode === code)
+      promotionsAvailable.push({
+          description: item.description.split(" - ")[1],
+          availability: item.maxQtyAllowed > 1,
+
+      })
+
+  })
+}
+
+
+
+
+
 function ChooseSolution({
   searchingTicket,
   currentPassenger,
@@ -70,8 +93,12 @@ function ChooseSolution({
   const endTime = new Date(legsRecap[legsRecap.length - 1].endDateTime);
   const totalPassengers = searchingTicket.adultsN + searchingTicket.kidsN;
   const duration = solutionRecap?.journeyDuration.split(":");
+  const servicesAvailable = getServicesAvailable(purchasableItems);
+  const [serviceSelected,setServiceSelected] = useState([]);
   console.log("ChooseSolution -> render -> solutionDetails: ", solutionDetails);
   console.log("ChooseSolution -> render -> solutionRecap: ", solutionRecap);
+  console.log("ChooseSolution -> render -> serviceSelected: ", serviceSelected);
+
 
   const propContent = [
     {
@@ -119,14 +146,37 @@ function ChooseSolution({
           </Grid>
         </div>
       ),
-    },
-    {
-      key: "passengersI",
-      body: (
-        <div>
+    }
+  ];
+
+  return (
+    <div className={classes.ChooseSolution}>
+      <StepContainer
+        onCancel={() => {}}
+        onGoOn={() => {
+          if (
+            !backTrip &&
+            searchingTicket.roundtrip &&
+            currentPassenger.index === totalPassengers
+          )
+            console.log("Scelta delle promozioni per il viaggio di ritorno");
+          else if (
+            !searchingTicket.roundtrip &&
+            currentPassenger.index === totalPassengers
+          )
+            console.log("Fine scelta promozioni");
+          else if(currentPassenger.index < searchingTicket.adultsN)
+            setNextPassenger("adult")
+          else 
+              setNextPassenger("kids")
+        }}
+      >
+        <div className={classes.findSolutionContainer}>
+          <Card content={propContent} />
+          <div>
           <Box>
             <h5>
-              Passeggero {currentPassenger} di {totalPassengers} - Adulto
+              Passeggero {currentPassenger.index} di {totalPassengers} - {(currentPassenger.passType === "adult")? "Adulto" : "Ragazzo" }
             </h5>
             <h5>CartaFreccia</h5>
           </Box>
@@ -156,39 +206,25 @@ function ChooseSolution({
                   </h5>
                 </Box>
                 <Box className={classes.servicesContainer}>
-                  {getServicesAvailable(purchasableItems).map((item) => {
-                    return <ButtonClasses title={item.description} price={item.price}/>;
+                  {servicesAvailable.map((item) => {
+                    return (
+                      
+                    <div onClick={()=> {
+                      let serviceUpdate = [...serviceSelected]
+                      serviceUpdate[index] = {...serviceUpdate[index], item: item}
+                      setServiceSelected(serviceUpdate)
+                      }}>
+                      <ButtonClasses item={item} />
+                    </div>);
                   })}
+                </Box>
+                <Box>
+                  <PromotionsWidget serviceSelected={serviceSelected[index]} promotionsServiceSelected={getPromotions(serviceSelected[index]?.code,purchasableItems)} />  
                 </Box>
               </>
             );
           })}
         </div>
-      ),
-    },
-  ];
-
-  return (
-    <div className={classes.ChooseSolution}>
-      <StepContainer
-        onCancel={() => {}}
-        onGoOn={() => {
-          if (
-            !backTrip &&
-            searchingTicket.roundtrip &&
-            currentPassenger === totalPassengers
-          )
-            console.log("Scelta delle promozioni per il viaggio di ritorno");
-          else if (
-            !searchingTicket.roundtrip &&
-            currentPassenger === totalPassengers
-          )
-            console.log("Fine scelta promozioni");
-          else setNextPassenger();
-        }}
-      >
-        <div className={classes.findSolutionContainer}>
-          <Card content={propContent} />
         </div>
       </StepContainer>
     </div>

@@ -210,7 +210,6 @@ const BuyForm = forwardRef((props, _ref) => {
   const filterOptions = createFilterOptions({
     matchFrom: "start",
     stringify: (station) => station.name,
-    //stations.map((station) => station[1]).filter((station) => station !== arriveStation)
   });
 
   const swapStations = () => {

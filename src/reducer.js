@@ -24,7 +24,10 @@ const reducer = (state, action) => {
     case "SET_SOLUTION_RECAP":
       return { ...state,solutionRecap: action.payload.solutionRecap }
     case "SET_NEXT_PASSENGER":
-      return { ...state,currentPassenger: state.currentPassenger + 1 }
+      return { ...state,currentPassenger: {
+        index: state.currentPassenger.index + 1,
+        passType: action.payload.passType
+      }}
     default:
       throw new Error();
   }

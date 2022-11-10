@@ -40,8 +40,8 @@ function App() {
   const setIsLoading = (isLoading) =>
     dispatch({ type: "SET_IS_LOADING", payload: { isLoading } });
 
-  const setNextPassenger = () => 
-  dispatch({ type: "SET_NEXT_PASSENGER" });
+  const setNextPassenger = (passType) => 
+  dispatch({ type: "SET_NEXT_PASSENGER", payload: {passType} });
 
   const onGoNextBuy = (stepBuy) => {
     setIsLoading(true);
@@ -77,7 +77,10 @@ function App() {
       case "getSolutionInfo": {
         dispatch({
           type: "SET_SOLUTION_DETAILS",
-          payload: { result, currentPassenger: 1 },
+          payload: { result, currentPassenger: {
+            index: 1,
+            passType: state.searchingTicket.adultsN? "adult" : "child"
+          }},
         });
         incrementStep();
         break;

@@ -22,19 +22,12 @@ const useStyles = makeStyles((theme, props) => {
 function ButtonClasses(props) {
   const classes = useStyles();
 
+  console.log(props)
   return (
     
       <div className={classes.formButton}>
-        <IconButton
-          edge="start"
-          className={classes.menuButton}
-          color="inherit"
-          aria-label="menu"
-        >
-          {props.icon}
-        </IconButton>
-        <Typography variant="h5">{props.title}</Typography>
-        <Typography variant="h5">da {getPriceFormat(props.price)}€</Typography>
+        <Typography variant="h5">{props.item.description}</Typography>
+        <Typography variant="h5">da {getPriceFormat(props.item.price)}€</Typography>
       </div>
   );
 }
