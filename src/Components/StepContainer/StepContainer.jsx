@@ -13,10 +13,10 @@ function StepContainer(props) {
     <div>
       <div>{props.children}</div>
       {!props.keyboardOpened && (
-        <AppBar position="fixed" color="#ffffff" className={classes.appBar}>
+        <AppBar position="fixed" color="#ffffff" className={classes.stepper}>
           <Toolbar>
             {props.onCancel && (
-              <Button onClick={() => props.onCancel()} variant="outlined">
+              <Button onClick={() => props.onCancel()} variant="outlined" className={props.initialMenu? classes.initialCanel : classes.cancelButton }>
                 Annulla
               </Button>
             )}

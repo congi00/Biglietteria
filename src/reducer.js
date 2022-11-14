@@ -28,6 +28,10 @@ const reducer = (state, action) => {
         index: state.currentPassenger.index + 1,
         passType: action.payload.passType
       }}
+    case "SET_SERVICIES_SELECTED":
+      return {...state, servicePromo: action.payload.promoSelected}
+    case "SET_PROMO_CHOICE":
+      return {...state, servicePromo: action.payload.servicePromo}
     default:
       throw new Error();
   }

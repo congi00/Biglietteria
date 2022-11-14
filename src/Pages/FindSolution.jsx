@@ -236,8 +236,8 @@ function FindSolution({
               aria-label="menu"
               disabled={!saleability}
               onClick={() => {
-                onGoNextBuy("getInfo");
                 solutionRecap(solution);
+                onGoNextBuy("getInfo");
               }}
             >
               <ArrowForwardIosIcon color="#ffffff" />

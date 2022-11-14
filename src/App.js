@@ -34,14 +34,31 @@ function App() {
   const searchingTicket = (searchingTicket) =>
     dispatch({ type: "SET_SEARCH_TICKET", payload: { searchingTicket } });
 
-  const solutionRecap = (solutionRecap) =>
+  const solutionRecap = (solutionRecap) => {
     dispatch({ type: "SET_SOLUTION_RECAP", payload: { solutionRecap } });
+  };
+
+  const loadPromotions = (promoSelected) => {
+    dispatch({ type: "SET_SERVICIES_SELECTED", payload: { promoSelected } });
+  }
 
   const setIsLoading = (isLoading) =>
     dispatch({ type: "SET_IS_LOADING", payload: { isLoading } });
 
-  const setNextPassenger = (passType) => 
-  dispatch({ type: "SET_NEXT_PASSENGER", payload: {passType} });
+  const setNextPassenger = (passType) =>
+    dispatch({ type: "SET_NEXT_PASSENGER", payload: { passType } });
+
+  const setInitialPromoSelection = () => {};
+
+  const setPromoSelected = ( leg, code) => {
+    console.log("App-> setPromoSelected-> state: ", state,leg);
+    let servicePromo = [...state.servicePromo];
+    console.log("App-> setPromoSelected-> servicePromo: ", servicePromo)
+    console.log("App-> setPromoSelected-> servicesSelected: ",servicePromo[state.currentPassenger.index -1][leg]);
+    servicePromo[state.currentPassenger.index -1][leg] = code
+    console.log("App-> setPromoSelected-> servicesSelected: ",servicePromo);
+    dispatch({ type: "SET_PROMO_CHOICE", payload: { servicePromo } });
+  };
 
   const onGoNextBuy = (stepBuy) => {
     setIsLoading(true);
@@ -53,12 +70,13 @@ function App() {
             result: getSolutionsResponse,
           });
           break;
-        case "getInfo":
+        case "getInfo": {
           onBridgeTrenitaliaResponse({
             endpoint: "getSolutionInfo",
             result: getSolutionInfoResponse,
           });
           break;
+        }
       }
       setIsLoading(false);
     }, TIMEOUT_API_REQUEST);
@@ -77,10 +95,13 @@ function App() {
       case "getSolutionInfo": {
         dispatch({
           type: "SET_SOLUTION_DETAILS",
-          payload: { result, currentPassenger: {
-            index: 1,
-            passType: state.searchingTicket.adultsN? "adult" : "child"
-          }},
+          payload: {
+            result,
+            currentPassenger: {
+              index: 1,
+              passType: state.searchingTicket.adultsN ? "adult" : "child",
+            },
+          },
         });
         incrementStep();
         break;
@@ -136,11 +157,17 @@ function App() {
               <ChooseSolution
                 searchingTicket={state.searchingTicket}
                 backTrip={state.backTrip}
+                incrementStep={incrementStep}
                 currentPassenger={state.currentPassenger}
                 solutionDetails={state.solutionDetails}
                 solutionRecap={state.solutionRecap}
                 setNextPassenger={setNextPassenger}
+                loadPromotions={loadPromotions}
+                setPromoSelected={setPromoSelected}
               />
+            )}
+            {state.step === 4 && state.serviceSelected === "BUY_TICKET" && (
+              <div>dati passeggero</div>
             )}
           </Suspense>
         }

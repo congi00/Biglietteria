@@ -1,5 +1,4 @@
 import React from "react";
-import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Radio from "@material-ui/core/Radio";
@@ -7,7 +6,6 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Switch from "@material-ui/core/Switch";
-import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import { getPriceFormat } from "../../utils";
 
@@ -38,7 +36,7 @@ const useStyles = makeStyles((theme, props) => {
   };
 });
 
-function PromotionsWidget({ serviceSelected, promotionsSelection }) {
+function PromotionsWidget({ leg, serviceSelected, setPromoChoice, promotionsSelection, currentPassenger }) {
   const classes = useStyles();
   const item = serviceSelected?.item;
   const [value, setValue] = React.useState(promotionsSelection[0].description);
@@ -50,6 +48,11 @@ function PromotionsWidget({ serviceSelected, promotionsSelection }) {
 
   const handleChange = (event) => {
     setValue(event.target.value);
+    promotionsSelection.forEach(promo => {
+        if(event.target.value === promo.description)
+            setPromoChoice(promo.code,leg);
+    });
+    
   };
 
   console.log("PromotionsWidget -> render -> serviceSelected", serviceSelected);
@@ -115,4 +118,4 @@ function PromotionsWidget({ serviceSelected, promotionsSelection }) {
   );
 }
 
-export default PromotionsWidget;
+export default React.memo(PromotionsWidget);

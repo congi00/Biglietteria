@@ -15,7 +15,7 @@ import {
   getStartArriveH,
   getPriceFormat,
 } from "../utils";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const useStyles = makeStyles((theme, props) => {
   return {
@@ -98,12 +98,21 @@ const getServicesAvailable = (promotions) => {
   return servicesAvailable;
 };
 
+
+const getFirstAvailablePromo = (promos) => {
+  for (let i = 0; i < promos?.length; i++) {
+    if (promos[i].maxQtyAllowed > 0) return promos[i];
+  }
+  return null;
+};
+
 const getPromotions = (code, promotions, passType) => {
   let promotionsAvailable = [];
   promotions.map((item) => {
     let compareCode = item.code.split(";")[1];
     if (compareCode === code)
       promotionsAvailable.push({
+        code: item.code,
         description: item.description.split(" - ")[0],
         availability: item.maxQtyAllowed > 1,
         price:
@@ -113,12 +122,10 @@ const getPromotions = (code, promotions, passType) => {
       });
   });
 
-  console.log(
-    "ChooseSolution -> getPromotions -> promotionsAvailable",
-    promotionsAvailable
-  );
   return promotionsAvailable;
 };
+
+
 
 function ChooseSolution({
   searchingTicket,
@@ -127,9 +134,13 @@ function ChooseSolution({
   solutionDetails,
   solutionRecap,
   setNextPassenger,
+  incrementStep,
+  loadPromotions,
+  setPromoSelected
 }) {
   const classes = useStyles();
   const legsRecap = solutionRecap?.legs;
+  const promo = getFirstAvailablePromo(solutionDetails?.data?.purchasableItems);
   const purchasableItems = solutionDetails?.data.purchasableItems;
   const startTime = new Date(legsRecap[0].startDateTime);
   const endTime = new Date(legsRecap[legsRecap.length - 1].endDateTime);
@@ -141,6 +152,26 @@ function ChooseSolution({
       return {item: servicesAvailable[0]}
     })
   );
+
+  useEffect(() => {
+    const totalP = searchingTicket.adultsN + searchingTicket.kidsN;
+    const promotionChoice = [];
+    solutionRecap.legs.forEach((element) => {
+      console.log(promo)
+      promotionChoice.push(promo?.code); //"20;30"
+    });
+    const servicesSelected = [];
+    for (let i = 0; i < totalP; i++) {
+      servicesSelected.push([...promotionChoice]);
+    }
+    loadPromotions(servicesSelected)
+  },[promo]);
+
+  const setPromoChoice = (code,leg) => {
+    setPromoSelected(leg,code)
+  }
+
+
   console.log("ChooseSolution -> render -> solutionDetails: ", solutionDetails);
   console.log("ChooseSolution -> render -> solutionRecap: ", solutionRecap);
   console.log("ChooseSolution -> render -> serviceSelected: ", serviceSelected);
@@ -206,10 +237,10 @@ function ChooseSolution({
             !searchingTicket.roundtrip &&
             currentPassenger.index === totalPassengers
           )
-            console.log("Fine scelta promozioni");
+            incrementStep()
           else if (currentPassenger.index < searchingTicket.adultsN)
-            setNextPassenger("adult");
-          else setNextPassenger("kids");
+            setNextPassenger("adult",serviceSelected);
+          else setNextPassenger("kids",serviceSelected);
         }}
       >
         <div className={classes.chooseSolutionContainer}>
@@ -301,7 +332,10 @@ function ChooseSolution({
                   </Box>
                   <Box>
                     <PromotionsWidget
+                      leg={index}
                       serviceSelected={serviceSelected[index]}
+                      currentPassenger={currentPassenger.index}
+                      setPromoChoice={setPromoChoice}
                       promotionsSelection={getPromotions(
                         serviceSelected[index]?.item.code,
                         purchasableItems,

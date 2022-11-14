@@ -1,5 +1,5 @@
 import React, { forwardRef, useMemo } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import useStyles from "./styles.js";
 import ButtonForm from "../../Components/ButtonForm/ButtonForm.jsx";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import ReplayIcon from "@material-ui/icons/Replay";
@@ -22,128 +22,12 @@ import Autocomplete, {
 } from "@material-ui/lab/Autocomplete";
 import stations from "../../StationList/trenitalia_station_list.json";
 
-/*
-station.data['stations'].map((station, index) => {
-    return station[1]
-})
-*/
-
 const internalStations = stations.data.stations.map((station, index) => {
   return {
     id: station[0],
     name: station[1],
     latitude: station[2],
     longitude: station[3],
-  };
-});
-
-const useStyles = makeStyles((theme, props) => {
-  return {
-    BuyTicketContainer: {
-      backgroundColor: "#008100",
-      textAlign: "center",
-      width: "100%",
-      height: "100%",
-      paddingBottom: "40px",
-    },
-    infoTitle: {
-      fontFamily: "Gotham",
-      fontStyle: "normal",
-      fontWeight: 350,
-      fontSize: "16px",
-      lineHeight: "19px",
-      display: "flex",
-      alignItems: "center",
-      color: "#fff",
-    },
-    buyForm: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      padding: "0px",
-      gap: "32px",
-      width: "90vw",
-      margin: "10px 5vw 0 5vw ",
-      border: "1px solid #fff",
-    },
-    buttonsFormBox: {
-      display: "flex",
-      justifyContent: "center",
-    },
-    stationSection: {
-      display: "flex",
-      flexDirection: "column",
-    },
-    inputField: {
-      border: "2px solid #A7A7A7",
-      fontStyle: "italic",
-      height: "5vh",
-      width: "100%",
-      marginTop: "5px",
-      borderRadius: "0px",
-      backgroundColor: "#fff",
-      paddingLeft: "10px",
-    },
-    inputLabel: {
-      color: "#fff",
-      fontFamily: "Gotham",
-      fontStyle: "normal",
-      fontWeight: "400",
-      fontSize: "16px",
-      lineHeight: "19px",
-      display: "flex",
-      alignItems: "center",
-    },
-    formBuy: {
-      width: "80%",
-    },
-    swapIcon: {
-      textAlign: "right",
-    },
-    inputStation: {
-      paddingRight: "80px",
-    },
-    withChange: {
-      margin: "20px 0 20px 0",
-    },
-    divider: {
-      backgroundColor: "#fff",
-      border: "1px solid #fff",
-      marginLeft: "0",
-    },
-    checkGo: {
-      width: "100%",
-      display: "flex",
-      justifyContent: "end",
-    },
-    roundtripLabel: {
-      margin: "20px 15px 0 0",
-    },
-    passengersSel: {
-      display: "flex",
-    },
-    menuButton: {
-      backgroundColor: "#E9E017",
-      borderRadius: "0px",
-      width: "75px",
-      height: "48px",
-      margin: "5px 10px 0 0",
-    },
-    numberI: {
-      width: "75px",
-      height: "48px",
-      padding: "0 0 6px 10px",
-      marginRight: "10px",
-      textAlign: "center",
-    },
-    cartaBox: {
-      display: "flex",
-      justifyContent: "space-between",
-      margin: "20px 0 20px 0",
-    },
-    paginationContent: {
-      color: "yellow",
-    },
   };
 });
 
@@ -291,7 +175,6 @@ const BuyForm = forwardRef((props, _ref) => {
             <div className={classes.swapIcon}>
               <IconButton
                 edge="start"
-                className={classes.swapIcon}
                 color="inherit"
                 aria-label="menu"
                 onClick={() => swapStations()}
@@ -331,6 +214,7 @@ const BuyForm = forwardRef((props, _ref) => {
             <div className={classes.withChange}>
               <label className={classes.inputLabel}>
                 <input
+                  className={classes.checkBox}
                   name="withChange"
                   type="checkbox"
                   checked={state.withChange}
@@ -347,6 +231,7 @@ const BuyForm = forwardRef((props, _ref) => {
               className={`${classes.inputLabel} ${classes.roundtripLabel}`}
             >
               <input
+                className={classes.checkBox}
                 name="roundtrip"
                 type="checkbox"
                 checked={state.roundtrip}
@@ -393,62 +278,68 @@ const BuyForm = forwardRef((props, _ref) => {
               style={{ marginRight: "100px" }}
             >
               <label className={classes.inputLabel}>Adulti</label>
-              <IconButton
-                edge="start"
-                className={classes.menuButton}
-                color="inherit"
-                aria-label="menu"
-                onClick={() => handleChangeInputN("+", "adults")}
-              >
-                <AddIcon color="#ffffff" />
-              </IconButton>
-              <input
-                name="adultsN"
-                type="number"
-                value={state.adultsN}
-                className={classes.numberI}
-                required
-                readOnly
-              />
-              <IconButton
-                edge="start"
-                className={classes.menuButton}
-                color="inherit"
-                aria-label="menu"
-                onClick={() => handleChangeInputN("-", "adults")}
-              >
-                <RemoveIcon color="#ffffff" />
-              </IconButton>
+              <div>
+                <IconButton
+                  edge="start"
+                  className={classes.menuButton}
+                  color="inherit"
+                  aria-label="menu"
+                  disabled={state.adultsN === 0}
+                  onClick={() => handleChangeInputN("-", "adults")}
+                >
+                  <RemoveIcon color="#ffffff" />
+                </IconButton>
+                <input
+                  name="adultsN"
+                  type="number"
+                  value={state.adultsN}
+                  className={classes.numberI}
+                  required
+                  readOnly
+                />
+                <IconButton
+                  edge="start"
+                  className={classes.menuButton}
+                  color="inherit"
+                  aria-label="menu"
+                  onClick={() => handleChangeInputN("+", "adults")}
+                >
+                  <AddIcon color="#ffffff" />
+                </IconButton>
+              </div>
             </div>
             <div className={classes.passengersBox}>
               <label className={classes.inputLabel}>Ragazzi</label>
-              <IconButton
-                edge="start"
-                className={classes.menuButton}
-                color="inherit"
-                aria-label="menu"
-                onClick={() => handleChangeInputN("+", "kids")}
-              >
-                <AddIcon color="#ffffff" />
-              </IconButton>
-              <input
-                name="adultsN"
-                type="number"
-                defaultValue="0"
-                value={state.kidsN}
-                className={classes.numberI}
-                readOnly
-                required
-              />
-              <IconButton
-                edge="start"
-                className={classes.menuButton}
-                color="inherit"
-                aria-label="menu"
-                onClick={() => handleChangeInputN("-", "kids")}
-              >
-                <RemoveIcon color="#ffffff" />
-              </IconButton>
+              <div>
+                <IconButton
+                  edge="start"
+                  className={classes.menuButton}
+                  color="inherit"
+                  aria-label="menu"
+                  disabled={state.kidsN === 0}
+                  onClick={() => handleChangeInputN("-", "kids")}
+                >
+                  <RemoveIcon color="#ffffff" />
+                </IconButton>
+                <input
+                  name="adultsN"
+                  type="number"
+                  defaultValue="0"
+                  value={state.kidsN}
+                  className={classes.numberI}
+                  readOnly
+                  required
+                />
+                <IconButton
+                  edge="start"
+                  className={classes.menuButton}
+                  color="inherit"
+                  aria-label="menu"
+                  onClick={() => handleChangeInputN("+", "kids")}
+                >
+                  <AddIcon color="#ffffff" />
+                </IconButton>
+              </div>
             </div>
           </Box>
           <Divider
@@ -459,7 +350,7 @@ const BuyForm = forwardRef((props, _ref) => {
           <div className={classes.cartaBox}>
             <label className={classes.inputLabel}>CartaFreccia</label>
             <Button
-              className={classes.paginationContent}
+              className={classes.linkCard}
               href="/"
               component={Link}
               onClick={(event) => {

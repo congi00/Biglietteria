@@ -9,14 +9,14 @@ import BuyForm from "../Components/BuyForm/BuyForm.jsx";
 
 const useStyles = makeStyles((theme, props) => {
   return {
-    BuyTicket: {
-      marginBottom: "64px",
-    },
-    BuyTicketContainer: {
+    buyTicket: {
       backgroundColor: "#008100",
+      paddingTop: "100px",
+      marginBottom: "120px",
+      height: "100vh"
+    },
+    buyTicketContainer: {
       textAlign: "center",
-      width: "100%",
-      height: "100%",
     },
     infoTitle: {
       fontFamily: "Gotham",
@@ -34,7 +34,6 @@ const useStyles = makeStyles((theme, props) => {
       alignItems: "center",
       padding: "0px",
       gap: "32px",
-      width: "90vw",
       margin: "10px 5vw 0 5vw ",
     },
   };
@@ -57,7 +56,7 @@ function BuyTicket({
   ];
 
   return (
-    <div className={classes.BuyTicket}>
+    <div className={classes.buyTicket}>
       <StepContainer
         onCancel={() => {}}
         onSearch={() => {
@@ -74,7 +73,7 @@ function BuyTicket({
         }}
         keyboardOpened={keyboardOpened}
       >
-        <div className={classes.BuyTicketContainer}>
+        <div className={classes.buyTicketContainer}>
           <Box display="flex" justifyContent="center">
             <IconButton
               edge="start"

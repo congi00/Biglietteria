@@ -11,7 +11,7 @@ function Header({ decrementStep }) {
   const classes = useStyles();
 
   return (
-    <AppBar position="static" color="#ffffff" className={classes.appBar}>
+    <AppBar position="fixed" color="#ffffff" className={classes.header}>
       <Toolbar>
         <Box display="flex" justifyContent="space-between" width={"100%"}>
           <Box>

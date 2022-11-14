@@ -5,11 +5,10 @@ const useStyles = (theme, props) => {
     menuButton: {
       paddingTop: "10px",
     },
-    appBar: {
-      position: "fixed",
-      left: 0,
-      top: 0,
-    },
+    header:{
+      height: "80px",
+      paddingTop: "10px"
+    }
   };
 };
 

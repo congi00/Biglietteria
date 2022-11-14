@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = (theme, props) => {
   return {
     cardStyle: {
-      width: "80vw",
+      width: "90vw",
       backgroundColor: "unset",
       borderRadius: "0px",
       border: "1px solid #fff",
@@ -16,12 +16,12 @@ const useStyles = (theme, props) => {
       padding: "20px 0 0 20px",
       fontFamily: "Gotham",
       fontSize: "20px",
-      fontWeight: "400",
-      lineHeight: "32px",
-      letterSpacing: "0px",
+      fontWeight: "700",
+      lineHeight: "15px",
+      letterSpacing: "0.5px",
     },
     cardBody: {
-      padding: "20px",
+      padding: "30px",
     },
   };
 };
