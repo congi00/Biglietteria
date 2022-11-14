@@ -21,7 +21,7 @@ function StepContainer(props) {
               </Button>
             )}
             {props.onSearch && (
-              <Button onClick={() => props.onSearch()} variant="outlined">
+              <Button onClick={() => props.onSearch()} variant="outlined" className={classes.findButton}>
                 Cerca
               </Button>
             )}
