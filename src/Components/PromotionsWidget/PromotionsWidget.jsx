@@ -17,26 +17,45 @@ const useStyles = makeStyles((theme, props) => {
     },
     itemBox: {
       margin: "0 0 10px 40px",
-      width: "93%",
+      width: "80vw",
       height: "105px",
       backgroundColor: "#fff",
       padding: "20px",
     },
     choiceSit: {
-      textAlign: "right",
-      width: "100%",
       color: "#fff",
+      width: "86vw",
+      display: "flex",
+      textAlign: "right",
+      justifyContent: "right",
+      margin: "25px 0px 20px",
+    },
+    descriptionItem: {
+      fontSize: "20px",
+      fontWeight: "600",
+    },
+    priceItem: {
+      textAlign: "right",
+      fontSize: "30px",
+      fontWeight: "600",
     },
     opacityOn: {
-        opacity: "0.5",
-      },
-      opacityOff: {
-        opacity: "1",
-      },
+      opacity: "0.5",
+    },
+    opacityOff: {
+      opacity: "1",
+    },
   };
 });
 
-function PromotionsWidget({ leg, serviceSelected, setPromoChoice, promotionsSelection, currentPassenger }) {
+function PromotionsWidget({
+  leg,
+  serviceSelected,
+  globalServiceSelected,
+  promotionsSelection,
+  setServiceSelected,
+  currentPassenger,
+}) {
   const classes = useStyles();
   const item = serviceSelected?.item;
   const [value, setValue] = React.useState(promotionsSelection[0].description);
@@ -48,11 +67,16 @@ function PromotionsWidget({ leg, serviceSelected, setPromoChoice, promotionsSele
 
   const handleChange = (event) => {
     setValue(event.target.value);
-    promotionsSelection.forEach(promo => {
-        if(event.target.value === promo.description)
-            setPromoChoice(promo.code,leg);
+    promotionsSelection.forEach((promo) => {
+      if (event.target.value === promo.description) {
+        let serviceUpdate = [...globalServiceSelected];
+        serviceUpdate[leg] = {
+          ...serviceUpdate[leg],
+          item: {...item, codePromo: promo.code}
+        };
+        setServiceSelected(serviceUpdate);
+      }
     });
-    
   };
 
   console.log("PromotionsWidget -> render -> serviceSelected", serviceSelected);
@@ -67,19 +91,20 @@ function PromotionsWidget({ leg, serviceSelected, setPromoChoice, promotionsSele
           <Grid item xs={12}>
             <Typography variant="h5">SERVIZIO {item?.description}</Typography>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} style={{ paddingTop: "0" }}>
             <Typography variant="h5">Seleziona l'offerta</Typography>
           </Grid>
         </Grid>
       </div>
-      <FormControl style={{width:"100%"}}>
-        <RadioGroup value={value} onChange={handleChange} >
+      <FormControl style={{ width: "100%" }}>
+        <RadioGroup value={value} onChange={handleChange}>
           {promotionsSelection.map((item) => {
             return (
               <Grid
                 container
                 spacing={3}
                 className={classes.itemBox}
+                key={"Promo_" + item.code}
                 style={{
                   backgroundColor:
                     value === item.description ? "yellow" : "#fff",
@@ -92,13 +117,27 @@ function PromotionsWidget({ leg, serviceSelected, setPromoChoice, promotionsSele
                     disabled={!item.availability}
                   />
                 </Grid>
-                <Grid item xs={8}
-                className={item.availability? classes.opacityOff : classes.opacityOn}>
-                  <div>{item.description}</div>
+                <Grid
+                  item
+                  xs={8}
+                  className={
+                    item.availability ? classes.opacityOff : classes.opacityOn
+                  }
+                >
+                  <div className={classes.descriptionItem}>
+                    {item.description}
+                  </div>
                 </Grid>
-                <Grid item xs={3}
-                className={item.availability? classes.opacityOff : classes.opacityOn}>
-                  <div>{getPriceFormat(item.price)} €</div>
+                <Grid
+                  item
+                  xs={3}
+                  className={
+                    item.availability ? classes.opacityOff : classes.opacityOn
+                  }
+                >
+                  <div className={classes.priceItem}>
+                    {getPriceFormat(item.price)} €
+                  </div>
                 </Grid>
               </Grid>
             );

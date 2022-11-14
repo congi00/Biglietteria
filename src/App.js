@@ -16,7 +16,7 @@ const BuyTicket = React.lazy(() => import("./Pages/BuyTicket.jsx"));
 const theme = createTheme();
 
 theme.typography.h5 = {
-  fontSize: "16px",
+  fontSize: "20px",
 };
 
 const TIMEOUT_API_REQUEST = 1000;

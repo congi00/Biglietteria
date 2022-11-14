@@ -19,15 +19,18 @@ import { useState, useEffect } from "react";
 
 const useStyles = makeStyles((theme, props) => {
   return {
-    root: {
+    recap: {
       color: "#fff",
+      paddingRight: "20px"
     },
-    ChooseSolution: {
-      marginBottom: "100px",
+    chooseSolution: {
+      height:"100%",
+      backgroundColor: "#008100",
+      paddingTop: "100px",
+      marginBottom: "170px",
     },
     chooseSolutionContainer: {
       paddingTop: "20px",
-      backgroundColor: "#008100",
       width: "100%",
       display: "flex",
       alignItems: "center",
@@ -38,13 +41,16 @@ const useStyles = makeStyles((theme, props) => {
       backgroundColor: "#EDEEEF",
       height: "150px",
       padding: "35px 0",
+      marginBottom: "20px"
     },
     passengerBox: {
-      width: "80vw",
+      width: "90vw",
       border: "1px solid #fff",
+      marginBottom: '60px'
     },
     infosRoute: {
       color: "#fff",
+      marginBottom: "40px",
       padding: "0 0 20px 40px",
     },
     passengerInfos: {
@@ -81,6 +87,7 @@ const getServicesAvailable = (promotions) => {
   let servicesAvailable = [];
   promotions.map((item) => {
     let code = item.code.split(";")[1];
+    let codePromo = item.code.split(";")[0];
     let description = item.description.split(" - ")[1];
     let indexOfService = servicesAvailable
       .map((service) => service.code)
@@ -88,6 +95,7 @@ const getServicesAvailable = (promotions) => {
     if (indexOfService === -1)
       servicesAvailable.push({
         code: code,
+        codePromo: item.code,
         description: description,
         price: item.amount,
       });
@@ -125,6 +133,13 @@ const getPromotions = (code, promotions, passType) => {
   return promotionsAvailable;
 };
 
+const setInitialServicesSel = (legsRecap,servicesAvailable) => {  
+  let totalItems = []
+  legsRecap.map(leg => {
+    totalItems.push({item: servicesAvailable})
+  })
+  return totalItems
+}
 
 
 function ChooseSolution({
@@ -147,11 +162,9 @@ function ChooseSolution({
   const totalPassengers = searchingTicket.adultsN + searchingTicket.kidsN;
   const duration = solutionRecap?.journeyDuration.split(":");
   const servicesAvailable = getServicesAvailable(purchasableItems);
-  const [serviceSelected, setServiceSelected] = useState(
-    legsRecap.map(leg => {
-      return {item: servicesAvailable[0]}
-    })
-  );
+  const [serviceSelected, setServiceSelected] = useState(setInitialServicesSel(legsRecap,servicesAvailable[0]))
+
+  console.log("ChooseSolution -> render -> serviceSelected: ", serviceSelected);
 
   useEffect(() => {
     const totalP = searchingTicket.adultsN + searchingTicket.kidsN;
@@ -167,14 +180,10 @@ function ChooseSolution({
     loadPromotions(servicesSelected)
   },[promo]);
 
-  const setPromoChoice = (code,leg) => {
-    setPromoSelected(leg,code)
-  }
 
 
   console.log("ChooseSolution -> render -> solutionDetails: ", solutionDetails);
   console.log("ChooseSolution -> render -> solutionRecap: ", solutionRecap);
-  console.log("ChooseSolution -> render -> serviceSelected: ", serviceSelected);
   console.log("ChooseSolution -> render -> servicesAvailable[0]: ", servicesAvailable[0]);
 
   const propContent = [
@@ -182,7 +191,7 @@ function ChooseSolution({
       title: "Viaggio di andata",
       key: "goTravel",
       body: (
-        <div className={classes.root}>
+        <div className={classes.recap}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <Typography variant="h5">
@@ -191,27 +200,27 @@ function ChooseSolution({
               </Typography>
             </Grid>
             <Grid item xs={6}>
-              <Typography variant="h5">
+              <Typography variant="h5" style={{fontSize: "30px"}}>
                 {startTime.getHours()}:{minutesFormat(startTime.getMinutes())} -{" "}
                 {endTime.getHours()}:{minutesFormat(endTime.getMinutes())}
               </Typography>
             </Grid>
-            <Grid item xs={3}>
-              <Typography variant="h5">
+            <Grid item xs={6}>
+              <Typography variant="h5" style={{fontSize: "30px", fontWeight: "200",textAlign: "right"}}>
                 da <b>{getPriceFormat(solutionRecap?.price)} €</b>
               </Typography>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} style={{paddingTop: "0"}}>
               <Typography variant="h5">
                 {parseInt(duration[0])}h {duration[1]}min
               </Typography>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={3} style={{paddingTop: "0"}}>
               <Typography variant="h5">
                 Cambi: <b>{legsRecap.length - 1}</b>
               </Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={6} style={{paddingTop: "0"}}>
               <Typography variant="h5">
                 Treno: <b>{getTrains([...legsRecap])}</b>
               </Typography>
@@ -223,7 +232,7 @@ function ChooseSolution({
   ];
 
   return (
-    <div className={classes.ChooseSolution}>
+    <div className={classes.chooseSolution}>
       <StepContainer
         onCancel={() => {}}
         onGoOn={() => {
@@ -236,11 +245,24 @@ function ChooseSolution({
           else if (
             !searchingTicket.roundtrip &&
             currentPassenger.index === totalPassengers
-          )
+          ){
+            console.log(serviceSelected)
+            serviceSelected.forEach((service,index) => {
+              setPromoSelected(index,service.item.codePromo);
+            });
             incrementStep()
-          else if (currentPassenger.index < searchingTicket.adultsN)
+          }else if (currentPassenger.index < searchingTicket.adultsN){
+            serviceSelected.forEach((service,index) => {
+              setPromoSelected(index,service.item.codePromo);
+            });
+            console.log(serviceSelected.description)
             setNextPassenger("adult",serviceSelected);
-          else setNextPassenger("kids",serviceSelected);
+          }else{ 
+            serviceSelected.forEach((service,index) => {
+              setPromoSelected(index,service.item.codePromo);
+            });
+            setNextPassenger("kids",serviceSelected);
+          }
         }}
       >
         <div className={classes.chooseSolutionContainer}>
@@ -253,10 +275,10 @@ function ChooseSolution({
                   {currentPassenger.passType === "adult" ? "Adulto" : "Ragazzo"}
                 </Typography>
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={3} style={{paddingTop: "0"}}>
                 <Typography variant="h5">CartaFreccia</Typography>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={6} style={{paddingTop: "0"}}>
                 <Button
                   className={classes.linkContent}
                   href="/"
@@ -271,7 +293,7 @@ function ChooseSolution({
             </Grid>
             {legsRecap.map((leg, index) => {
               return (
-                <>
+                <div key={"Tratta_"+index}>
                   <Box className={classes.infosRoute}>
                     <Grid
                       container
@@ -282,7 +304,7 @@ function ChooseSolution({
                           Tratta {index + 1} di {legsRecap.length}
                         </Typography>
                       </Grid>
-                      <Grid item xs={12}>
+                      <Grid item xs={12} style={{paddingTop: "0"}}>
                         <Typography variant="h5">
                           {leg.routeInfo.vehicleDescription +
                             " " +
@@ -290,14 +312,14 @@ function ChooseSolution({
                         </Typography>
                       </Grid>
 
-                      <Grid item xs={12}>
+                      <Grid item xs={12} style={{paddingTop: "0"}}>
                         <Typography variant="h5">
                           Da {leg.startStop.shortDescription} a{" "}
                           {leg.endStop.shortDescription}
                         </Typography>
                       </Grid>
 
-                      <Grid item xs={12}>
+                      <Grid item xs={12} style={{paddingTop: "0"}}>
                         <Typography variant="h5">
                           {getDateFormat(new Date(leg.startDateTime))}
                           {"  "}
@@ -310,7 +332,7 @@ function ChooseSolution({
                     </Grid>
                   </Box>
                   <Box className={classes.servicesContainer}>
-                    {servicesAvailable.map((item) => {
+                    {servicesAvailable.map((item,i) => {
                       return (
                         <div
                           onClick={() => {
@@ -321,6 +343,7 @@ function ChooseSolution({
                             };
                             setServiceSelected(serviceUpdate);
                           }}
+                          key={"solution_"+index+"."+i}
                         >
                           <ButtonClasses
                             item={item}
@@ -334,8 +357,9 @@ function ChooseSolution({
                     <PromotionsWidget
                       leg={index}
                       serviceSelected={serviceSelected[index]}
+                      globalServiceSelected={serviceSelected}
                       currentPassenger={currentPassenger.index}
-                      setPromoChoice={setPromoChoice}
+                      setServiceSelected={setServiceSelected}
                       promotionsSelection={getPromotions(
                         serviceSelected[index]?.item.code,
                         purchasableItems,
@@ -343,7 +367,7 @@ function ChooseSolution({
                       )}
                     />
                   </Box>
-                </>
+                </div>
               );
             })}
           </div>

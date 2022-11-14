@@ -26,7 +26,7 @@ function StepContainer(props) {
               </Button>
             )}
             {props.onGoOn && (
-              <Button onClick={() => props.onGoOn()} variant="outlined">
+              <Button onClick={() => props.onGoOn()} variant="outlined" className={classes.findButton}>
                 Prosegui
               </Button>
             )}
