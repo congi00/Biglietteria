@@ -2,6 +2,7 @@ import React, { Suspense } from "react";
 import Header from "./Components/Header/Header.jsx";
 import FindSolution from "./Pages/FindSolution.jsx";
 import ChooseSolution from "./Pages/ChooseSolution.jsx";
+import PassengersInfos from "./Pages/PassengersInfos.jsx";
 import Loader from "./Components/Loader/Loader.jsx";
 import reducer from "./reducer";
 import { initialState } from "./reducer";
@@ -40,7 +41,7 @@ function App() {
 
   const loadPromotions = (promoSelected) => {
     dispatch({ type: "SET_SERVICIES_SELECTED", payload: { promoSelected } });
-  }
+  };
 
   const setIsLoading = (isLoading) =>
     dispatch({ type: "SET_IS_LOADING", payload: { isLoading } });
@@ -48,15 +49,21 @@ function App() {
   const setNextPassenger = (passType) =>
     dispatch({ type: "SET_NEXT_PASSENGER", payload: { passType } });
 
-  const setInitialPromoSelection = () => {};
+  const setTotalPrice = (currentPassenger,totalPrice) => {
+    let totalPriceState = [...state.totalPrices];
+    totalPriceState[currentPassenger-1] = totalPrice;
+    dispatch({type: "SET_TOTAL_PRICE", payload: {totalPriceState}})
+  }
 
-  const setPromoSelected = ( leg, code) => {
-    console.log("App-> setPromoSelected-> state: ", state,leg);
+  const resetCurrentPassenger = () => 
+    dispatch({type: "RESET_CURRENT_PASSENGER", payload: {currentPassenger: {
+      index: 1,
+      passType: state.searchingTicket.adultsN ? "adult" : "child",
+    }}})
+
+  const setPromoSelected = (leg, code) => {
     let servicePromo = [...state.servicePromo];
-    console.log("App-> setPromoSelected-> servicePromo: ", servicePromo)
-    console.log("App-> setPromoSelected-> servicesSelected: ",servicePromo[state.currentPassenger.index -1][leg]);
-    servicePromo[state.currentPassenger.index -1][leg] = code
-    console.log("App-> setPromoSelected-> servicesSelected: ",servicePromo);
+    servicePromo[state.currentPassenger.index - 1][leg] = code;
     dispatch({ type: "SET_PROMO_CHOICE", payload: { servicePromo } });
   };
 
@@ -164,10 +171,18 @@ function App() {
                 setNextPassenger={setNextPassenger}
                 loadPromotions={loadPromotions}
                 setPromoSelected={setPromoSelected}
+                setTotalPrice={setTotalPrice}
+                resetCurrentPassenger={resetCurrentPassenger}
               />
             )}
             {state.step === 4 && state.serviceSelected === "BUY_TICKET" && (
-              <div>dati passeggero</div>
+              <PassengersInfos
+                keyboardOpened={state.keyboardOpened}
+                searchingTicket={state.searchingTicket}
+                solutionRecap={state.solutionRecap}
+                currentPassenger={state.currentPassenger}
+                totalPrices={state.totalPrices}
+              />
             )}
           </Suspense>
         }

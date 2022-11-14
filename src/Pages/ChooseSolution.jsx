@@ -141,6 +141,22 @@ const setInitialServicesSel = (legsRecap,servicesAvailable) => {
   return totalItems
 }
 
+const setFinalSelectedServices = (serviceSelected,setPromoSelected,promotions,currentPassenger,setTotalPrice) => {
+  let totalPrice = 0
+  serviceSelected.forEach((service,index) => {
+    setPromoSelected(index,service.item.codePromo);
+    promotions.map((item) => {
+      let compareCode = item.code;
+      if (compareCode === service.item.codePromo)
+      totalPrice+= currentPassenger.passType === "adult"
+      ? item.customDataField.adultAmount
+      : item.customDataField.childAmount
+    })
+  });
+  setTotalPrice(currentPassenger.index,totalPrice)
+  console.log("totalPrice: ",totalPrice)
+}
+
 
 function ChooseSolution({
   searchingTicket,
@@ -151,7 +167,9 @@ function ChooseSolution({
   setNextPassenger,
   incrementStep,
   loadPromotions,
-  setPromoSelected
+  setPromoSelected,
+  setTotalPrice,
+  resetCurrentPassenger
 }) {
   const classes = useStyles();
   const legsRecap = solutionRecap?.legs;
@@ -246,21 +264,16 @@ function ChooseSolution({
             !searchingTicket.roundtrip &&
             currentPassenger.index === totalPassengers
           ){
-            console.log(serviceSelected)
-            serviceSelected.forEach((service,index) => {
-              setPromoSelected(index,service.item.codePromo);
-            });
+            setFinalSelectedServices(serviceSelected,setPromoSelected,purchasableItems,currentPassenger,setTotalPrice)
+            resetCurrentPassenger()
             incrementStep()
           }else if (currentPassenger.index < searchingTicket.adultsN){
-            serviceSelected.forEach((service,index) => {
-              setPromoSelected(index,service.item.codePromo);
-            });
-            console.log(serviceSelected.description)
+            setFinalSelectedServices(serviceSelected,setPromoSelected,purchasableItems,currentPassenger,setTotalPrice)
+           
+            // setTotalPrice(getTotalPrice(serviceSelected,))
             setNextPassenger("adult",serviceSelected);
           }else{ 
-            serviceSelected.forEach((service,index) => {
-              setPromoSelected(index,service.item.codePromo);
-            });
+            setFinalSelectedServices(serviceSelected,setPromoSelected,purchasableItems,currentPassenger,setTotalPrice)
             setNextPassenger("kids",serviceSelected);
           }
         }}
