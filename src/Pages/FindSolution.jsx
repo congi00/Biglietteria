@@ -9,6 +9,7 @@ import IconButton from "@material-ui/core/IconButton";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import Link from "@material-ui/core/Link";
 import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
 import { minutesFormat, getPriceFormat } from "../utils";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -17,9 +18,11 @@ const NUM_ELEMENTS_PAGE = 5;
 
 const useStyles = makeStyles((theme, props) => {
   return {
-    FindSolution: {
-      marginBottom: "64px",
-      color: "#fff",
+    findSolution: {
+      backgroundColor: "#008100",
+      paddingTop: "100px",
+      marginBottom: "170px",
+      height: "100%",
     },
     findSolutionContainer: {
       paddingTop: "20px",
@@ -32,14 +35,19 @@ const useStyles = makeStyles((theme, props) => {
     solutionsBox: {
       display: "flex",
       flexDirection: "column",
+      width: "90vw",
+      color: "#fff",
+      paddingTop: "40px",
     },
     recapBody: {
       display: "flex",
       paddingLeft: "20px",
+      lineHeight: "10px",
     },
     dataRecap: {
       marginRight: "40px",
       color: "#fff",
+      fontSize: "25px",
     },
     dataRecapTitle: {
       fontWeight: "100",
@@ -52,14 +60,16 @@ const useStyles = makeStyles((theme, props) => {
     },
     solutionText: {
       marginBottom: "0",
-      marginTop: "15px",
+      marginTop: "10px",
+      fontSize: "20px"
     },
     divider: {
       backgroundColor: "#4F4F4F",
-      margin: "0px 100px 0px 0px",
+      margin: "0px 60px -25px 0px",
     },
     arrowRight: {
       width: "100%",
+      height: "10px",
       textAlign: "right",
     },
     paginationBox: {
@@ -79,6 +89,33 @@ const useStyles = makeStyles((theme, props) => {
     },
     opacityOff: {
       opacity: "1",
+    },
+    linkCard: {
+      color: "yellow",
+      textDecoration: "underline",
+      paddingLeft: 0,
+      position: "relativa",
+      bottom: "10px",
+    },
+    checkBox: {
+      appearance: "none",
+      backgroundColor: "transparent",
+      margin: "0 10px -5px 0",
+      font: "inherit",
+      color: "#fff",
+      width: "20px",
+      height: "20px",
+      border: "2px solid #fff",
+      borderRadius: "0",
+      transform: "translateY(-0.075em)",
+      "&::before": {
+        content: "",
+        width: "0.65em",
+        height: "0.65em",
+        transform: "scale(0)",
+        transition: "120ms transform ease-in-out",
+        boxShadow: "inset 1em 1em var(#ccc)",
+      },
     },
   };
 });
@@ -169,11 +206,12 @@ function FindSolution({
       body: (
         <Box className={classes.recapBody}>
           <div className={classes.dataRecap}>
-            <h5 className={classes.dataRecapTitle}>Stazione di partenza: </h5>
-            <h5 className={classes.dataRecapTitle}>Stazione di arrivo: </h5>
-            <h5 className={classes.dataRecapTitle}>Data e ora di partenza: </h5>
-            <h5 className={classes.dataRecapTitle}>Adulti: </h5>
-            <h5 className={classes.dataRecapTitle}>Ragazzi: </h5>
+            <h5 className={classes.dataRecapTitle}>Stazione di partenza </h5>
+            <h5 className={classes.dataRecapTitle}>Stazione di arrivo </h5>
+            <h5 className={classes.dataRecapTitle}>Data e ora di partenza </h5>
+            <h5 className={classes.dataRecapTitle}>Adulti </h5>
+            <h5 className={classes.dataRecapTitle}>Ragazzi </h5>
+            <h5 className={classes.dataRecapTitle}>CartaFreccia </h5>
           </div>
           <div className={classes.dataRecap}>
             <h5>{searchingTicket.startStation.name}</h5>
@@ -181,6 +219,16 @@ function FindSolution({
             <h5>{searchingTicket.startDate.toDateString()}</h5>
             <h5>{searchingTicket.adultsN}</h5>
             <h5>{searchingTicket.kidsN}</h5>
+            <Button
+              className={classes.linkCard}
+              href="/"
+              component={Link}
+              onClick={(event) => {
+                event.preventDefault();
+              }}
+            >
+              Inserisci CartaFreccia
+            </Button>
           </div>
         </Box>
       ),
@@ -208,22 +256,25 @@ function FindSolution({
             }
           </h5>
 
-          <Box display="flex">
-            <h5 className={classes.solutionText}>
+          <Box display="flex" justifyContent="space-between" paddingRight={"60px"}>
+            <h5 className={classes.solutionText} style={{fontSize: "30px"}}>
               {startTime.getHours()}:{minutesFormat(startTime.getMinutes())} -{" "}
               {endTime.getHours()}:{minutesFormat(endTime.getMinutes())}
             </h5>
+            <div>
             {saleability ? (
-              <h5 className={classes.thinClass + " " + classes.solutionText}>
+              <h5 className={classes.thinClass + " " + classes.solutionText} style={{fontSize: "30px"}}>
                 da <b>{getPriceFormat(solution?.price)} €</b>
               </h5>
             ) : (
-              <h5 className={classes.thinClass + " " + classes.solutionText}>
+              <h5 className={classes.thinClass + " " + classes.solutionText} style={{fontSize: "30px"}}>
                 Non acquistabile
               </h5>
             )}
+            </div>
+            
           </Box>
-          <h5 className={classes.thinClass + " " + classes.solutionText}>
+          <h5 className={classes.thinClass + " " + classes.solutionText} style={{margin: "0 0 20px"}}>
             {parseInt(duration[0])}h {duration[1]}min
           </h5>
 
@@ -245,7 +296,7 @@ function FindSolution({
           </div>
 
           <Box display="flex">
-            <h5 className={classes.thinClass + " " + classes.solutionText}>
+            <h5 className={classes.thinClass + " " + classes.solutionText} style={{marginRight: "20px"}}>
               Cambi: <b>{solution?.legs.length - 1}</b>
             </h5>
             <h5 className={classes.thinClass + " " + classes.solutionText}>
@@ -260,36 +311,35 @@ function FindSolution({
 
   // console.log("FindSolution -> render -> paginationData: ", paginationData);
   return (
-    <div className={classes.FindSolution}>
+    <div className={classes.findSolution}>
       <StepContainer onCancel={() => {}}>
         <div className={classes.findSolutionContainer}>
           {paginationData.currentPage === 0 && <Card content={propContent} />}
 
           <Box className={classes.solutionsBox}>
             <div>
-              <h5>
+              <Typography variant="h5">
                 Seleziona la soluzione scelta del Cliente per visualizzare le
                 offerte
-              </h5>
+              </Typography>
             </div>
-            <div style={{ marginBottom: "20px" }}>
-              <label
-                className={`${classes.inputLabel} ${classes.roundtripLabel}`}
-              >
-                <input
-                  name="roundtrip"
-                  type="checkbox"
-                  checked={availableSolution}
-                  onChange={() => {
-                    setAvailableSolution(!availableSolution);
-                    setPaginationData({
-                      totalPage: getTotalPage(solutionViewed || []),
-                      currentPage: 0,
-                    });
-                  }}
-                />
+            <div style={{ margin: "20px 0", fontSize: "20px",display: "flex" }}>
+              <input
+                name="roundtrip"
+                type="checkbox"
+                className={classes.checkBox}
+                checked={availableSolution}
+                onChange={() => {
+                  setAvailableSolution(!availableSolution);
+                  setPaginationData({
+                    totalPage: getTotalPage(solutionViewed || []),
+                    currentPage: 0,
+                  });
+                }}
+              />
+              <Typography variant="h5">
                 Mostra solo le soluzioni disponibili
-              </label>
+              </Typography>
             </div>
 
             <SolutionItem
