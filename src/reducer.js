@@ -2,7 +2,10 @@ export const initialState = {
   step: 0,
   serviceSelected: null,
   isLoading: false,
+  isPrinting: false,
+  currentTrip: "andata",
   totalPrices: [],
+  passengersInfos: [],
 };
 
 const reducer = (state, action) => {
@@ -16,6 +19,8 @@ const reducer = (state, action) => {
       return { ...state, isLoading: action.payload.isLoading };
     case "SET_SERVICE_SELECTED":
       return { ...state, serviceSelected: action.payload.serviceSelected };
+    case "SET_IS_PRINTING":
+      return { ...state, isPrinting: action.payload.isPrinting };
     case "SET_SEARCH_TICKET":
       return { ...state, searchingTicket: action.payload.searchingTicket };
     case "FOCUSED":
@@ -40,6 +45,8 @@ const reducer = (state, action) => {
           passType: action.payload.passType,
         },
       };
+    case "SET_CURRENT_TRIP":
+      return { ...state, currentTrip: action.payload.currentTrip };
     case "SET_SERVICIES_SELECTED":
       return { ...state, servicePromo: action.payload.promoSelected };
     case "SET_PROMO_CHOICE":
@@ -48,6 +55,8 @@ const reducer = (state, action) => {
       return { ...state, totalPrices: action.payload.totalPriceState };
     case "RESET_CURRENT_PASSENGER":
       return { ...state, currentPassenger: action.payload.currentPassenger };
+    case "SET_PASSENGER_INFO":
+      return { ...state, passengersInfos: action.payload.passengersInfos };
     default:
       throw new Error();
   }

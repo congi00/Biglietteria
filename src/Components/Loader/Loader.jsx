@@ -1,13 +1,12 @@
 import React from "react";
 import useStyles from "./styles.js";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import Box from "@material-ui/core/Box";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-function Loader() {
+function Loader({title, icon}) {
   const classes = useStyles({ isRch: false });
 
   return (
@@ -18,12 +17,12 @@ function Loader() {
       className={classes.root}
     >
       <DialogTitle className={classes.loaderTitle}>
-        {"RICERCA IN CORSO"}
+        {title}
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
           <Box className={classes.loaderBody}>
-            <CircularProgress disableShrink />
+            {icon}
             <h5>Attendere</h5>
           </Box>
         </DialogContentText>

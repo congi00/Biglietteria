@@ -2,24 +2,21 @@ import React, { Fragment, useRef, useState } from "react";
 import StepContainer from "../Components/StepContainer/StepContainer.jsx";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "../Components/Card/Card.jsx";
-import PassengersForm from "../Components/PassengersForm/PassengersForm.jsx";
 import { Box } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
-import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns"; // choose your lib
-import { it } from "date-fns/locale";
+import IconButton from "@material-ui/core/IconButton";
+import LocalAtmIcon from "@material-ui/icons/LocalAtm";
 import { getDateFormat, minutesFormat, getPriceFormat } from "../utils";
-import { useForm } from "react-hook-form";
 
 const useStyles = makeStyles((theme, props) => {
   return {
-    passengersInfos: {
+    paymentPage: {
       backgroundColor: "#008100",
       paddingTop: "100px",
       marginBottom: "120px",
       height: "100vh",
     },
-    passengersInfosContainer: {
+    paymentPageContainer: {
       display: "flex",
       flexDirection: "column",
       justifyContent: "center",
@@ -29,27 +26,38 @@ const useStyles = makeStyles((theme, props) => {
       paddingLeft: "20px",
       lineHeight: "10px",
     },
+    methodBox: {
+      width: "170px",
+      textAlign: "center",
+      backgroundColor: "yellow",
+    },
   };
 });
+
+const getTotalPrice = (prices) => {
+  let total = 0;
+  prices.forEach((element) => {
+    total += element;
+  });
+  return total;
+};
 
 const defaultValues = {
   FirstName: "",
   LastName: "",
 };
 
-function PassengersInfos({
-  keyboardOpened,
+function PaymentPage({
   searchingTicket,
   solutionRecap,
-  currentPassenger,
   totalPrices,
   setNextPassenger,
   setContactInfos,
   incrementStep,
+  onGoNextBuy,
 }) {
   const classes = useStyles();
-  const refform = useRef();
-
+  const [methodSelected, setMethodSelected] = useState("CONTANTI");
   const totalPassengers = searchingTicket.adultsN + searchingTicket.kidsN;
 
   const recapCard = [
@@ -75,7 +83,7 @@ function PassengersInfos({
             )}
           </Typography>
           <Typography variant="h5">
-            Totale: {getPriceFormat(totalPrices[currentPassenger.index - 1])} €
+            Totale: {getPriceFormat(getTotalPrice(totalPrices))} €
           </Typography>
         </Box>
       ),
@@ -84,41 +92,50 @@ function PassengersInfos({
 
   const detailsForm = [
     {
-      title: "Dati passeggeri",
-      key: "dataPassenger",
+      title: "Scegli il metodo di pagamento",
+      key: "paymentMethod",
       body: (
-        <Box className={classes.recapBody}>
-          <Typography variant="h5">
-            Passeggero {currentPassenger.index} di {totalPassengers}
-          </Typography>
-          <PassengersForm
-            ref={refform}
-            setContactInfos={setContactInfos}
-            defaultValues={defaultValues}
-
-          />
+        <Box className={classes.paymentBody}>
+          <div className={classes.methodBox}>
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              onClick={() => {
+                setMethodSelected("CONTANTI");
+              }}
+            >
+              <LocalAtmIcon fontSize="large" />
+            </IconButton>
+            <Typography variant="h5">CONTANTI</Typography>
+            <Typography variant="h5" style={{ fontSize: "15px" }}>
+              nessuna commissione
+            </Typography>
+          </div>
         </Box>
       ),
+    },
+    {
+      title: (
+        <Box display="flex" justifyContent="space-between">
+          <Typography variant="h5" style={{ fontSize: "15px" }}>
+            Importo Totale
+          </Typography>
+          <Typography variant="h5" style={{ fontSize: "15px" }}>
+            {getPriceFormat(getTotalPrice(totalPrices))}€
+          </Typography>
+        </Box>
+      ),
+      key: "totalTitle",
     },
   ];
 
   return (
-    <div className={classes.passengersInfos}>
-      <StepContainer
-        onCancel={() => {}}
-        onGoOn={() => {
-          refform.current.submit();
-          if (currentPassenger.index === totalPassengers)
-            incrementStep()
-          else if (currentPassenger.index < searchingTicket.adultsN) {
-            setNextPassenger("adult");
-          } else {
-            setNextPassenger("kids");
-          }
-        }}
-        keyboardOpened={keyboardOpened}
-      >
-        <div className={classes.passengersInfosContainer}>
+    <div className={classes.paymentPage}>
+      <StepContainer onCancel={() => {}} onGoOn={() => {
+        onGoNextBuy("verifyTrenitalia");
+      }}>
+        <div className={classes.paymentPageContainer}>
           <Card content={recapCard} />
           <Card content={detailsForm} />
         </div>
@@ -127,4 +144,4 @@ function PassengersInfos({
   );
 }
 
-export default PassengersInfos;
+export default PaymentPage;

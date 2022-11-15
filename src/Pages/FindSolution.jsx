@@ -174,6 +174,7 @@ const getTotalPage = (solutions) => {
 function FindSolution({
   searchingTicket,
   solutions,
+  currentTrip,
   onGoNextBuy,
   solutionRecap,
 }) {
@@ -182,6 +183,7 @@ function FindSolution({
     totalPage: 0,
     currentPage: 0,
   });
+  const isGoing = (currentTrip === "andata")
   const [availableSolution, setAvailableSolution] = useState(false);
   const [solutionViewed, setSolutionViewed] = useState([]);
 
@@ -201,7 +203,7 @@ function FindSolution({
 
   const propContent = [
     {
-      title: "Viaggio di andata",
+      title: "Viaggio di "+ currentTrip,
       key: "goTravel",
       body: (
         <Box className={classes.recapBody}>
@@ -214,9 +216,9 @@ function FindSolution({
             <h5 className={classes.dataRecapTitle}>CartaFreccia </h5>
           </div>
           <div className={classes.dataRecap}>
-            <h5>{searchingTicket.startStation.name}</h5>
-            <h5>{searchingTicket.arriveStation.name}</h5>
-            <h5>{searchingTicket.startDate.toDateString()}</h5>
+            <h5>{isGoing ? searchingTicket.startStation.name : searchingTicket.arriveStation.name}</h5>
+            <h5>{isGoing ? searchingTicket.arriveStation.name : searchingTicket.startStation.name}</h5>
+            <h5>{isGoing ? searchingTicket.startDate.toDateString() : searchingTicket.returnDate.toDateString()}</h5>
             <h5>{searchingTicket.adultsN}</h5>
             <h5>{searchingTicket.kidsN}</h5>
             <Button
