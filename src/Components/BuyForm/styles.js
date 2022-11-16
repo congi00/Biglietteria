@@ -19,7 +19,10 @@ const useStyles = (theme, props) => {
       marginTop: "5px",
       borderRadius: "0px",
       backgroundColor: "#fff",
-      padding: "6px",
+      padding: "8px",
+      "& .MuiInput-underline:before":{
+        border: "0px"
+      },
     },
     inputLabel: {
       color: "#fff",
@@ -34,7 +37,7 @@ const useStyles = (theme, props) => {
       letterSpacing: "0.5px",
     },
     checkBox: {
-      appearance: "none",
+      // appearance: "none",
       backgroundColor: "transparent",
       margin: "5px",
       font: "inherit",
@@ -44,14 +47,6 @@ const useStyles = (theme, props) => {
       border: "2px solid #fff",
       borderRadius: "0",
       transform: "translateY(-0.075em)",
-      "&::before":{
-        content: "",
-        width: "0.65em",
-        height: "0.65em",
-        transform: "scale(0)",
-        transition: "120ms transform ease-in-out",
-        boxShadow: "inset 1em 1em var(#ccc)"
-      }
     },
     swapIcon: {
       height: "20px",

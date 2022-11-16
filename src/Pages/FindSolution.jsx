@@ -98,7 +98,7 @@ const useStyles = makeStyles((theme, props) => {
       bottom: "10px",
     },
     checkBox: {
-      appearance: "none",
+      // appearance: "none",
       backgroundColor: "transparent",
       margin: "0 10px -5px 0",
       font: "inherit",
@@ -201,6 +201,11 @@ function FindSolution({
     setSolutionViewed(_solutionViewed);
   }, [availableSolution]);
 
+
+  useEffect(() => {
+    window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+  }, []);
+  
   const propContent = [
     {
       title: "Viaggio di "+ currentTrip,
@@ -369,6 +374,7 @@ function FindSolution({
                       ...paginationData,
                       currentPage: backPage(paginationData.currentPage),
                     });
+                    window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
                   }}
                 >
                   {"<"} Soluzioni precedenti
@@ -388,6 +394,7 @@ function FindSolution({
                         ...paginationData,
                         currentPage: nextPage(paginationData.currentPage),
                       });
+                      window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
                     }}
                   >
                     Soluzioni successive{" >"}

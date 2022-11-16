@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState } from "react";
+import React, { Fragment, useRef, useState, useEffect } from "react";
 import StepContainer from "../Components/StepContainer/StepContainer.jsx";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "../Components/Card/Card.jsx";
@@ -34,14 +34,6 @@ const useStyles = makeStyles((theme, props) => {
   };
 });
 
-const getTotalPrice = (prices) => {
-  let total = 0;
-  prices.forEach((element) => {
-    total += element;
-  });
-  return total;
-};
-
 const defaultValues = {
   FirstName: "",
   LastName: "",
@@ -59,6 +51,11 @@ function PaymentPage({
   const classes = useStyles();
   const [methodSelected, setMethodSelected] = useState("CONTANTI");
   const totalPassengers = searchingTicket.adultsN + searchingTicket.kidsN;
+
+  useEffect(() => {
+    window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+  }, []);
+
 
   const recapCard = [
     {
@@ -83,7 +80,7 @@ function PaymentPage({
             )}
           </Typography>
           <Typography variant="h5">
-            Totale: {getPriceFormat(getTotalPrice(totalPrices))} €
+            Totale: {getPriceFormat(totalPrices)} €
           </Typography>
         </Box>
       ),
@@ -122,7 +119,7 @@ function PaymentPage({
             Importo Totale
           </Typography>
           <Typography variant="h5" style={{ fontSize: "15px" }}>
-            {getPriceFormat(getTotalPrice(totalPrices))}€
+            {getPriceFormat(totalPrices)}€
           </Typography>
         </Box>
       ),

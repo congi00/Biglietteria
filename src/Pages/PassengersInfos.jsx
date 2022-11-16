@@ -1,15 +1,11 @@
-import React, { Fragment, useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import StepContainer from "../Components/StepContainer/StepContainer.jsx";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "../Components/Card/Card.jsx";
 import PassengersForm from "../Components/PassengersForm/PassengersForm.jsx";
 import { Box } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
-import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns"; // choose your lib
-import { it } from "date-fns/locale";
 import { getDateFormat, minutesFormat, getPriceFormat } from "../utils";
-import { useForm } from "react-hook-form";
 
 const useStyles = makeStyles((theme, props) => {
   return {
@@ -52,6 +48,11 @@ function PassengersInfos({
 
   const totalPassengers = searchingTicket.adultsN + searchingTicket.kidsN;
 
+
+  useEffect(() => {
+    window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+  }, []);
+
   const recapCard = [
     {
       title: "Viaggio",
@@ -75,7 +76,7 @@ function PassengersInfos({
             )}
           </Typography>
           <Typography variant="h5">
-            Totale: {getPriceFormat(totalPrices[currentPassenger.index - 1])} €
+            Totale: {getPriceFormat(totalPrices)} €
           </Typography>
         </Box>
       ),

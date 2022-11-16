@@ -4,7 +4,8 @@ export const initialState = {
   isLoading: false,
   isPrinting: false,
   currentTrip: "andata",
-  totalPrices: [],
+  servicePromo:[],
+  totalPrices: 0,
   passengersInfos: [],
 };
 
@@ -48,7 +49,7 @@ const reducer = (state, action) => {
     case "SET_CURRENT_TRIP":
       return { ...state, currentTrip: action.payload.currentTrip };
     case "SET_SERVICIES_SELECTED":
-      return { ...state, servicePromo: action.payload.promoSelected };
+      return { ...state, servicePromo: action.payload.updateState };
     case "SET_PROMO_CHOICE":
       return { ...state, servicePromo: action.payload.servicePromo };
     case "SET_TOTAL_PRICE":

@@ -43,7 +43,9 @@ function App() {
   };
 
   const loadPromotions = (promoSelected) => {
-    dispatch({ type: "SET_SERVICIES_SELECTED", payload: { promoSelected } });
+    let updateState = [...state.servicePromo]
+    updateState.push(promoSelected)
+    dispatch({ type: "SET_SERVICIES_SELECTED", payload: { updateState } });
   };
 
   const setIsLoading = (isLoading) =>
@@ -58,9 +60,9 @@ function App() {
   const setCurrentTrip = (currentTrip) =>
     dispatch({ type: "SET_CURRENT_TRIP", payload: { currentTrip } });
 
-  const setTotalPrice = (currentPassenger, totalPrice) => {
-    let totalPriceState = [...state.totalPrices];
-    totalPriceState[currentPassenger - 1] = totalPrice;
+  const setTotalPrice = (totalPrice) => {
+    let totalPriceState = state.totalPrices;
+    totalPriceState += totalPrice;
     dispatch({ type: "SET_TOTAL_PRICE", payload: { totalPriceState } });
   };
 
@@ -75,9 +77,12 @@ function App() {
       },
     });
 
-  const setPromoSelected = (leg, code) => {
+  const setPromoSelected = (leg, promo) => {
     let servicePromo = [...state.servicePromo];
-    servicePromo[state.currentPassenger.index - 1][leg] = code;
+    if(state.currentTrip === "andata")
+      servicePromo[0][state.currentPassenger.index - 1][leg] = promo;
+    else
+      servicePromo[1][state.currentPassenger.index - 1][leg] = promo;
     dispatch({ type: "SET_PROMO_CHOICE", payload: { servicePromo } });
   };
 
@@ -156,6 +161,7 @@ function App() {
     else dispatch({ type: "UNFOCUSED" });
   };
 
+  
   console.debug("App -> render -> state: ", state);
   return (
     <ThemeProvider theme={theme}>

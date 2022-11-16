@@ -149,17 +149,18 @@ const setFinalSelectedServices = (
 ) => {
   let totalPrice = 0;
   serviceSelected.forEach((service, index) => {
-    setPromoSelected(index, service.item.codePromo);
     promotions.map((item) => {
       let compareCode = item.code;
-      if (compareCode === service.item.codePromo)
+      if (compareCode === service.item.codePromo) {
+        setPromoSelected(index, item);
         totalPrice +=
           currentPassenger.passType === "adult"
             ? item.customDataField.adultAmount
             : item.customDataField.childAmount;
+      }
     });
   });
-  setTotalPrice(currentPassenger.index, totalPrice);
+  setTotalPrice(totalPrice);
   console.log("totalPrice: ", totalPrice);
 };
 
@@ -177,7 +178,7 @@ function ChooseSolution({
   resetCurrentPassenger,
   currentTrip,
   setCurrentTrip,
-  onGoNextBuy
+  onGoNextBuy,
 }) {
   const classes = useStyles();
   const legsRecap = solutionRecap?.legs;
@@ -199,7 +200,7 @@ function ChooseSolution({
     const promotionChoice = [];
     solutionRecap.legs.forEach((element) => {
       console.log(promo);
-      promotionChoice.push(promo?.code); //"20;30"
+      promotionChoice.push(promo); //"20;30"
     });
     const servicesSelected = [];
     for (let i = 0; i < totalP; i++) {
@@ -207,6 +208,10 @@ function ChooseSolution({
     }
     loadPromotions(servicesSelected);
   }, [promo]);
+
+  useEffect(() => {
+    window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+  }, []);
 
   console.log("ChooseSolution -> render -> solutionDetails: ", solutionDetails);
   console.log("ChooseSolution -> render -> solutionRecap: ", solutionRecap);
@@ -272,6 +277,13 @@ function ChooseSolution({
       <StepContainer
         onCancel={() => {}}
         onGoOn={() => {
+          setFinalSelectedServices(
+            serviceSelected,
+            setPromoSelected,
+            purchasableItems,
+            currentPassenger,
+            setTotalPrice
+          );
           if (
             currentTrip === "andata" &&
             searchingTicket.roundtrip &&
@@ -282,39 +294,16 @@ function ChooseSolution({
             decrementStep();
           } else if (
             (!searchingTicket.roundtrip &&
-            currentPassenger.index === totalPassengers) ||
-            (currentTrip === "ritorno" && currentPassenger.index === totalPassengers)
+              currentPassenger.index === totalPassengers) ||
+            (currentTrip === "ritorno" &&
+              currentPassenger.index === totalPassengers)
           ) {
-            setFinalSelectedServices(
-              serviceSelected,
-              setPromoSelected,
-              purchasableItems,
-              currentPassenger,
-              setTotalPrice
-            );
             resetCurrentPassenger();
             incrementStep();
-          } else if (currentPassenger.index < searchingTicket.adultsN) {
-            setFinalSelectedServices(
-              serviceSelected,
-              setPromoSelected,
-              purchasableItems,
-              currentPassenger,
-              setTotalPrice
-            );
-
+          } else if (currentPassenger.index < searchingTicket.adultsN)
             // setTotalPrice(getTotalPrice(serviceSelected,))
             setNextPassenger("adult", serviceSelected);
-          } else {
-            setFinalSelectedServices(
-              serviceSelected,
-              setPromoSelected,
-              purchasableItems,
-              currentPassenger,
-              setTotalPrice
-            );
-            setNextPassenger("kids", serviceSelected);
-          }
+          else setNextPassenger("kids", serviceSelected);
         }}
       >
         <div className={classes.chooseSolutionContainer}>

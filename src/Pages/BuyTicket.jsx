@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef,useEffect } from "react";
 import StepContainer from "../Components/StepContainer/StepContainer.jsx";
 import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
@@ -54,6 +54,10 @@ function BuyTicket({
     "Inserisci la data di partenza",
     "Inserisci la data di ritorno",
   ];
+
+  useEffect(() => {
+    window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+  }, []);
 
   return (
     <div className={classes.buyTicket}>
