@@ -45,6 +45,7 @@ function BuyTicket({
   isKeyboardOpened,
   keyboardOpened,
   onGoNextBuy,
+  setLastLeg
 }) {
   const classes = useStyles();
   const formEl = useRef(null);
@@ -73,6 +74,7 @@ function BuyTicket({
           else {
             onGoNextBuy("getSolution");
             searchingTicket(formState);
+            setLastLeg(formState.startStation,formState.arriveStation)
           }
         }}
         keyboardOpened={keyboardOpened}

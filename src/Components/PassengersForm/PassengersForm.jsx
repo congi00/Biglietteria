@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useImperativeHandle  } from "react";
+import React, { Fragment, useRef, useState, useImperativeHandle } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Box } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
@@ -20,12 +20,24 @@ const useStyles = makeStyles((theme, props) => {
       boxSizing: "border-box",
       border: "2px solid #A7A7A7",
     },
+    boxField: {
+      display: "flex",
+      flexDirection: "column",
+      marginBottom: "20px",
+      "& label": {
+        color: "#fff",
+        fontSize: "16px",
+        marginBottom: "2px",
+      },
+    },
   };
 });
 
-const PassengersForm = forwardRef(({ defaultValues, setContactInfos },ref) => {
+const PassengersForm = forwardRef(({ defaultValues, setContactInfos }, ref) => {
   const classes = useStyles();
   const methods = useForm({ defaultValues });
+  const [contactData, setContactData] = useState(false);
+  const [giftCard, setGiftCard] = useState(false);
   const handleSubmit = methods.handleSubmit((data) => setContactInfos(data));
 
   useImperativeHandle(ref, () => ({
@@ -37,7 +49,7 @@ const PassengersForm = forwardRef(({ defaultValues, setContactInfos },ref) => {
   return (
     <FormProvider {...methods}>
       <form className="form" onSubmit={handleSubmit}>
-        <section>
+        <section className={classes.boxField}>
           <label>Nome*</label>
           <Controller
             className={classes.textInput}
@@ -46,16 +58,17 @@ const PassengersForm = forwardRef(({ defaultValues, setContactInfos },ref) => {
             control={methods.control}
           />
         </section>
-        <section>
+        <section className={classes.boxField}>
           <label>Cognome*</label>
           <Controller
             className={classes.textInput}
             as={TextField}
             name="LastName"
             control={methods.control}
+            rules={{ required: true }}
           />
         </section>
-        <section>
+        <section className={classes.boxField}>
           <label>Data di nascita</label>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <Controller
@@ -72,6 +85,7 @@ const PassengersForm = forwardRef(({ defaultValues, setContactInfos },ref) => {
                   outlined
                 />
               )}
+              rules={{ required: true }}
             />
           </MuiPickersUtilsProvider>
         </section>
@@ -83,39 +97,46 @@ const PassengersForm = forwardRef(({ defaultValues, setContactInfos },ref) => {
             control={methods.control}
             render={(props) => (
               <Switch
-                onChange={(e) => props.onChange(e.target.checked)}
-                checked={props.value}
+                onChange={(e) => {
+                  setContactData(!contactData);
+                  props.onChange(e.target.checked);
+                }}
+                checked={contactData}
               />
             )}
           />
         </section>
-        <section>
-          <label>Numero di telefono</label>
-          <Controller
-            className={classes.textInput}
-            as={TextField}
-            name="Telephone"
-            control={methods.control}
-          />
-        </section>
-        <section>
-          <label>Email</label>
-          <Controller
-            className={classes.textInput}
-            as={TextField}
-            name="Email"
-            control={methods.control}
-          />
-        </section>
-        <section>
-          <label>CartaFreccia</label>
-          <Controller
-            className={classes.textInput}
-            as={TextField}
-            name="CartaFreccia"
-            control={methods.control}
-          />
-        </section>
+        {contactData && (
+          <>
+            <section className={classes.boxField}>
+              <label>Numero di telefono</label>
+              <Controller
+                className={classes.textInput}
+                as={TextField}
+                name="Telephone"
+                control={methods.control}
+              />
+            </section>
+            <section className={classes.boxField}>
+              <label>Email</label>
+              <Controller
+                className={classes.textInput}
+                as={TextField}
+                name="Email"
+                control={methods.control}
+              />
+            </section>
+            <section className={classes.boxField}>
+              <label>CartaFreccia</label>
+              <Controller
+                className={classes.textInput}
+                as={TextField}
+                name="CartaFreccia"
+                control={methods.control}
+              />
+            </section>
+          </>
+        )}
 
         <section>
           <label>Il cliente ha un bonus/credito o una Carta Regalo?</label>
@@ -124,33 +145,40 @@ const PassengersForm = forwardRef(({ defaultValues, setContactInfos },ref) => {
             control={methods.control}
             render={(props) => (
               <Switch
-                onChange={(e) => props.onChange(e.target.checked)}
-                checked={props.value}
+                onChange={(e) => {
+                  props.onChange(e.target.checked);
+                  setGiftCard(!giftCard);
+                }}
+                checked={giftCard}
               />
             )}
           />
         </section>
-        <section>
-          <label>Codice identificativo</label>
-          <Controller
-            className={classes.textInput}
-            as={TextField}
-            name="BonusCode"
-            control={methods.control}
-          />
-        </section>
-        <section>
-          <label>Codice antifrode</label>
-          <Controller
-            className={classes.textInput}
-            as={TextField}
-            name="TrustCode"
-            control={methods.control}
-          />
-        </section>
+        {giftCard && (
+          <>
+            <section className={classes.boxField}>
+              <label>Codice identificativo</label>
+              <Controller
+                className={classes.textInput}
+                as={TextField}
+                name="BonusCode"
+                control={methods.control}
+              />
+            </section>
+            <section className={classes.boxField}>
+              <label>Codice antifrode</label>
+              <Controller
+                className={classes.textInput}
+                as={TextField}
+                name="TrustCode"
+                control={methods.control}
+              />
+            </section>
+          </>
+        )}
       </form>
     </FormProvider>
   );
-})
+});
 
 export default PassengersForm;

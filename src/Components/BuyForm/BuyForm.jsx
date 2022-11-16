@@ -47,6 +47,16 @@ const BuyForm = forwardRef((props, _ref) => {
     kidsN: beforeCompiled?.kidsN || 0,
   });
 
+  const getLastLeg = () => {
+    const leg = JSON.parse(localStorage.getItem("lastLeg"));
+    console.log(leg)
+    setState({
+      ...state,
+      startStation: leg?.start,
+      arriveStation: leg?.arrive,
+    });
+  };
+
   const handleChangeStation = (value, nameState) => {
     setState({ ...state, [nameState]: value });
   };
@@ -134,7 +144,11 @@ const BuyForm = forwardRef((props, _ref) => {
       body: (
         <>
           <Box className={classes.buttonsFormBox}>
-            <ButtonForm title="Ripeti ultima tratta" icon={<ReplayIcon />} />
+            <ButtonForm
+              onClick={getLastLeg}
+              title="Ripeti ultima tratta"
+              icon={<ReplayIcon />}
+            />
             <ButtonForm
               title="Scegli stazione preferita"
               icon={<FavoriteIcon />}

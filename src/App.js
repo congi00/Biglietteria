@@ -48,6 +48,10 @@ function App() {
     dispatch({ type: "SET_SERVICIES_SELECTED", payload: { updateState } });
   };
 
+  const setLastLeg = (start,arrive) => {
+    localStorage.setItem('lastLeg', JSON.stringify({start:start, arrive:arrive}));
+  }
+
   const setIsLoading = (isLoading) =>
     dispatch({ type: "SET_IS_LOADING", payload: { isLoading } });
 
@@ -203,6 +207,7 @@ function App() {
                 beforeCompiled={state.searchingTicket}
                 onGoNextBuy={onGoNextBuy}
                 isKeyboardOpened={isKeyboardOpened}
+                setLastLeg={setLastLeg}
                 keyboardOpened={state.keyboardOpened}
               />
             )}

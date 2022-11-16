@@ -21,7 +21,7 @@ function ButtonForm(props) {
   const classes = useStyles();
 
   return (
-    <div className={classes.formButton}>
+    <div className={classes.formButton} onClick={() => props.onClick()}>
       <IconButton
         edge="start"
         className={classes.menuButton}

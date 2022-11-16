@@ -14,6 +14,9 @@ const useStyles = makeStyles((theme, props) => {
       paddingTop: "100px",
       marginBottom: "120px",
       height: "100vh",
+      display: "flex",
+      alignItems: "center",
+      flexDirection: "column",
     },
     passengersInfosContainer: {
       display: "flex",
@@ -24,7 +27,15 @@ const useStyles = makeStyles((theme, props) => {
       display: "flex",
       paddingLeft: "20px",
       lineHeight: "10px",
+      color: "#fff"
     },
+    infosBody:{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      flexDirection: "column",
+      color: "#fff"
+    }
   };
 });
 
@@ -88,7 +99,7 @@ function PassengersInfos({
       title: "Dati passeggeri",
       key: "dataPassenger",
       body: (
-        <Box className={classes.recapBody}>
+        <Box className={classes.infosBody}>
           <Typography variant="h5">
             Passeggero {currentPassenger.index} di {totalPassengers}
           </Typography>
@@ -96,7 +107,6 @@ function PassengersInfos({
             ref={refform}
             setContactInfos={setContactInfos}
             defaultValues={defaultValues}
-
           />
         </Box>
       ),
