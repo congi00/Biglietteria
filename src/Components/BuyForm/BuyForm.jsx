@@ -358,7 +358,7 @@ const BuyForm = forwardRef(({isKeyboardOpened , beforeCompiled}, _ref) => {
                   disabled={state.adultsN === 0}
                   onClick={() => handleChangeInputN("-", "adults")}
                 >
-                  <RemoveIcon color="#ffffff" />
+                  <RemoveIcon color="inherit" />
                 </IconButton>
                 <input
                   name="adultsN"
@@ -375,7 +375,7 @@ const BuyForm = forwardRef(({isKeyboardOpened , beforeCompiled}, _ref) => {
                   aria-label="menu"
                   onClick={() => handleChangeInputN("+", "adults")}
                 >
-                  <AddIcon color="#ffffff" />
+                  <AddIcon color="inherit" />
                 </IconButton>
               </div>
             </div>
@@ -390,12 +390,11 @@ const BuyForm = forwardRef(({isKeyboardOpened , beforeCompiled}, _ref) => {
                   disabled={state.kidsN === 0}
                   onClick={() => handleChangeInputN("-", "kids")}
                 >
-                  <RemoveIcon color="#ffffff" />
+                  <RemoveIcon color="inherit" />
                 </IconButton>
                 <input
                   name="adultsN"
                   type="number"
-                  defaultValue="0"
                   value={state.kidsN}
                   className={classes.numberI}
                   readOnly
@@ -408,7 +407,7 @@ const BuyForm = forwardRef(({isKeyboardOpened , beforeCompiled}, _ref) => {
                   aria-label="menu"
                   onClick={() => handleChangeInputN("+", "kids")}
                 >
-                  <AddIcon color="#ffffff" />
+                  <AddIcon color="inherit" />
                 </IconButton>
               </div>
             </div>

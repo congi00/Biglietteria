@@ -6,6 +6,9 @@ const useStyles = (theme, props) => {
       paddingTop: "10px",
     },
     header:{
+      position: "relative",
+      top:0,
+      bottom:0,
       height: "80px",
       paddingTop: "10px"
     }

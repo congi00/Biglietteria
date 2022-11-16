@@ -43,14 +43,17 @@ function App() {
   };
 
   const loadPromotions = (promoSelected) => {
-    let updateState = [...state.servicePromo]
-    updateState.push(promoSelected)
+    let updateState = [...state.servicePromo];
+    updateState.push(promoSelected);
     dispatch({ type: "SET_SERVICIES_SELECTED", payload: { updateState } });
   };
 
-  const setLastLeg = (start,arrive) => {
-    localStorage.setItem('lastLeg', JSON.stringify({start:start, arrive:arrive}));
-  }
+  const setLastLeg = (start, arrive) => {
+    localStorage.setItem(
+      "lastLeg",
+      JSON.stringify({ start: start, arrive: arrive })
+    );
+  };
 
   const setIsLoading = (isLoading) =>
     dispatch({ type: "SET_IS_LOADING", payload: { isLoading } });
@@ -60,7 +63,7 @@ function App() {
 
   const setNextPassenger = (passType) =>
     dispatch({ type: "SET_NEXT_PASSENGER", payload: { passType } });
-  
+
   const setCurrentTrip = (currentTrip) =>
     dispatch({ type: "SET_CURRENT_TRIP", payload: { currentTrip } });
 
@@ -83,10 +86,9 @@ function App() {
 
   const setPromoSelected = (leg, promo) => {
     let servicePromo = [...state.servicePromo];
-    if(state.currentTrip === "andata")
+    if (state.currentTrip === "andata")
       servicePromo[0][state.currentPassenger.index - 1][leg] = promo;
-    else
-      servicePromo[1][state.currentPassenger.index - 1][leg] = promo;
+    else servicePromo[1][state.currentPassenger.index - 1][leg] = promo;
     dispatch({ type: "SET_PROMO_CHOICE", payload: { servicePromo } });
   };
 
@@ -135,8 +137,7 @@ function App() {
         //Increment step && update state solutions
         if (result?.data?.itineraries.length > 0) {
           dispatch({ type: "SET_SOLUTIONS", payload: { result } });
-          if(state.currentTrip === "andata")
-            incrementStep();
+          if (state.currentTrip === "andata") incrementStep();
         } else alert("No solutions founded");
         break;
       case "getSolutionInfo": {
@@ -168,13 +169,20 @@ function App() {
     else dispatch({ type: "UNFOCUSED" });
   };
 
-  
   console.debug("App -> render -> state: ", state);
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <div className="App">
-        <Header decrementStep={decrementStep} />
+        <Header
+          decrementStep={decrementStep}
+          step={state.step}
+          serviceSelected={state.serviceSelected}
+          currentTrip={state.currentTrip}
+          setCurrentTrip={setCurrentTrip}
+          setTotalPrice={setTotalPrice}
+          totalPrice={state.totalPrices}
+        />
 
         {state.isLoading && (
           <Loader

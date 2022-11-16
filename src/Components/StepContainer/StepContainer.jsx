@@ -12,7 +12,7 @@ const StepContainer = ({children, onCancel, onSearch, initialMenu, onGoOn, keybo
     <div>
       <div>{children}</div>
       {!keyboardOpened && (
-        <AppBar position="fixed" color="#ffffff" className={classes.stepper}>
+        <AppBar position="fixed" color="inherit" className={classes.stepper}>
           <Toolbar>
             {onCancel && (
               <Button onClick={() => onCancel()} variant="outlined" className={initialMenu? classes.initialCanel : classes.cancelButton }>
