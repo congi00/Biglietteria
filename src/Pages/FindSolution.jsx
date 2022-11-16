@@ -13,6 +13,7 @@ import Typography from "@material-ui/core/Typography";
 import { minutesFormat, getPriceFormat, getDateFormat, getTimeFormat } from "../utils";
 import { useState } from "react";
 import { useEffect } from "react";
+import PropTypes from "prop-types";
 
 const NUM_ELEMENTS_PAGE = 5;
 
@@ -171,13 +172,13 @@ const getTotalPage = (solutions) => {
  * @returns
  */
 
-function FindSolution({
+const FindSolution = ({
   searchingTicket,
   solutions,
   currentTrip,
   onGoNextBuy,
   solutionRecap,
-}) {
+}) => {
   const classes = useStyles();
   const [paginationData, setPaginationData] = useState({
     totalPage: 0,
@@ -199,7 +200,7 @@ function FindSolution({
     });
 
     setSolutionViewed(_solutionViewed);
-  }, [paginationData,solutions.data.itineraries,availableSolution]);
+  }, [availableSolution]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -447,5 +448,13 @@ function FindSolution({
     </div>
   );
 }
+
+FindSolution.propTypes = {
+  searchingTicket: PropTypes.object,
+  solutions: PropTypes.array,
+  currentTrip: PropTypes.string,
+  onGoNextBuy: PropTypes.func,
+  solutionRecap: PropTypes.object,
+};
 
 export default FindSolution;

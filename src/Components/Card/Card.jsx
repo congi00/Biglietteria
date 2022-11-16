@@ -1,15 +1,15 @@
 import React from "react";
 import useStyles from "./styles.js";
+import PropTypes from "prop-types";
 import { Card as MUICard } from "@material-ui/core";
 
-function Card({ content }) {
+const Card = ({ content }) => {
   const classes = useStyles();
 
   return (
     <>
       {content.map(
         (cards) => (
-          //<React.Fragment key={cards.key}>
           <MUICard className={classes.cardStyle} key={cards.key}>
             {cards.title && (
               <div className={classes.cardHeader}>{cards.title}</div>
@@ -17,10 +17,13 @@ function Card({ content }) {
             {cards.body && <div className={classes.cardBody}>{cards.body}</div>}
           </MUICard>
         )
-        //</React.Fragment>
       )}
     </>
   );
 }
+
+Card.propTypes = {
+  content: PropTypes.array
+};
 
 export default Card;

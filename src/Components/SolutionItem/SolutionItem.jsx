@@ -1,7 +1,8 @@
 import React from "react";
 import useStyles from "./styles.js";
+import PropTypes from "prop-types";
 
-function SolutionItem({ content }) {
+const SolutionItem = ({ content }) => {
   const classes = useStyles();
 
   if (!content) return null;
@@ -20,5 +21,9 @@ function SolutionItem({ content }) {
     </>
   );
 }
+
+SolutionItem.propTypes = {
+  content: PropTypes.array
+};
 
 export default SolutionItem;

@@ -5,28 +5,27 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import PropTypes from "prop-types";
 
-function StepContainer(props) {
+const StepContainer = ({children, onCancel, onSearch, initialMenu, onGoOn, keyboardOpened}) => {
   const classes = useStyles();
 
-  //console.log("%c StepContainer render props: ", "color:#f22", props);
   return (
     <div>
-      <div>{props.children}</div>
-      {!props.keyboardOpened && (
+      <div>{children}</div>
+      {!keyboardOpened && (
         <AppBar position="fixed" color="#ffffff" className={classes.stepper}>
           <Toolbar>
-            {props.onCancel && (
-              <Button onClick={() => props.onCancel()} variant="outlined" className={props.initialMenu? classes.initialCanel : classes.cancelButton }>
+            {onCancel && (
+              <Button onClick={() => onCancel()} variant="outlined" className={initialMenu? classes.initialCanel : classes.cancelButton }>
                 Annulla
               </Button>
             )}
-            {props.onSearch && (
-              <Button onClick={() => props.onSearch()} variant="outlined" className={classes.findButton}>
+            {onSearch && (
+              <Button onClick={() => onSearch()} variant="outlined" className={classes.findButton}>
                 Cerca
               </Button>
             )}
-            {props.onGoOn && (
-              <Button onClick={() => props.onGoOn()} variant="outlined" className={classes.findButton}>
+            {onGoOn && (
+              <Button onClick={() => onGoOn()} variant="outlined" className={classes.findButton}>
                 Prosegui
               </Button>
             )}
@@ -39,6 +38,11 @@ function StepContainer(props) {
 
 StepContainer.propTypes = {
   onCancel: PropTypes.func,
+  onSearch: PropTypes.func,
+  initialMenu: PropTypes.bool,
+  onGoOn: PropTypes.func,
+  keyboardOpened: PropTypes.bool,
+  children: PropTypes.node
 };
 
 export default StepContainer;

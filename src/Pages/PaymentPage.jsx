@@ -7,6 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import LocalAtmIcon from "@material-ui/icons/LocalAtm";
 import { getDateFormat, minutesFormat, getPriceFormat } from "../utils";
+import PropTypes from "prop-types";
 
 const useStyles = makeStyles((theme, props) => {
   return {
@@ -35,12 +36,12 @@ const useStyles = makeStyles((theme, props) => {
 });
 
 
-function PaymentPage({
+const PaymentPage = ({
   searchingTicket,
   solutionRecap,
   totalPrices,
   onGoNextBuy,
-}) {
+}) => {
   const classes = useStyles();
   const [methodSelected, setMethodSelected] = useState("CONTANTI");
   console.log(methodSelected)
@@ -134,5 +135,13 @@ function PaymentPage({
     </div>
   );
 }
+
+
+PaymentPage.propTypes = {
+  searchingTicket: PropTypes.object,
+  solutionRecap: PropTypes.object,
+  totalPrices: PropTypes.number,
+  onGoNextBuy: PropTypes.func,
+};
 
 export default PaymentPage;

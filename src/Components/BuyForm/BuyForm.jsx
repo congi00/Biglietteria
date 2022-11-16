@@ -1,5 +1,6 @@
 import React, { forwardRef, useMemo } from "react";
 import useStyles from "./styles.js";
+import PropTypes from "prop-types";
 import ButtonForm from "../../Components/ButtonForm/ButtonForm.jsx";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import ReplayIcon from "@material-ui/icons/Replay";
@@ -38,8 +39,7 @@ const internalStations = stations.data.stations.map((station, index) => {
 
 const MAX_PASSENGERS = 5;
 
-const BuyForm = forwardRef((props, _ref) => {
-  const { beforeCompiled } = props;
+const BuyForm = forwardRef(({isKeyboardOpened , beforeCompiled}, _ref) => {
   const classes = useStyles();
   const [state, setState] = React.useState({
     startStation: beforeCompiled?.startStation || null,
@@ -193,8 +193,8 @@ const BuyForm = forwardRef((props, _ref) => {
                     {...params}
                     className={classes.inputField}
                     margin="normal"
-                    onFocus={() => props.isKeyboardOpened(true)}
-                    onBlur={() => props.isKeyboardOpened(false)}
+                    onFocus={() => isKeyboardOpened(true)}
+                    onBlur={() => isKeyboardOpened(false)}
                     placeholder="Cerca una stazione"
                     InputProps={{ ...params.InputProps, type: "search" }}
                   />
@@ -232,8 +232,8 @@ const BuyForm = forwardRef((props, _ref) => {
                     {...params}
                     className={classes.inputField}
                     margin="normal"
-                    onFocus={() => props.isKeyboardOpened(true)}
-                    onBlur={() => props.isKeyboardOpened(false)}
+                    onFocus={() => isKeyboardOpened(true)}
+                    onBlur={() => isKeyboardOpened(false)}
                     placeholder="Cerca una stazione"
                     InputProps={{ ...params.InputProps, type: "search" }}
                   />
@@ -443,5 +443,10 @@ const BuyForm = forwardRef((props, _ref) => {
     </form>
   );
 });
+
+BuyForm.propTypes = {
+  isKeyboardOpened: PropTypes.func, 
+  beforeCompiled: PropTypes.object
+};
 
 export default BuyForm;

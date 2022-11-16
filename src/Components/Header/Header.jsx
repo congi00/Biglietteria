@@ -6,8 +6,9 @@ import IconButton from "@material-ui/core/IconButton";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import Box from "@material-ui/core/Box";
+import PropTypes from "prop-types";
 
-function Header({ decrementStep }) {
+const Header = ({ decrementStep }) => {
   const classes = useStyles();
 
   return (
@@ -39,5 +40,10 @@ function Header({ decrementStep }) {
     </AppBar>
   );
 }
+
+
+Header.propTypes = {
+  decrementStep: PropTypes.func
+};
 
 export default Header;

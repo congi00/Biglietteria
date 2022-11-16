@@ -16,6 +16,7 @@ import {
   getPriceFormat,
 } from "../utils";
 import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 
 const useStyles = makeStyles((theme, props) => {
   return {
@@ -89,7 +90,7 @@ const getServicesAvailable = (promotions) => {
     let code = item.code.split(";")[1];
     let description = item.description.split(" - ")[1];
     let indexOfService = servicesAvailable
-      .forEach((service) => service.code)
+      .map((service) => service.code)
       .indexOf(code);
     if (indexOfService === -1)
       servicesAvailable.push({
@@ -207,11 +208,7 @@ function ChooseSolution({
     }
     loadPromotions(servicesSelected);
   }, [
-    promo,
-    searchingTicket.adultsN,
-    loadPromotions,
-    searchingTicket.kidsN,
-    solutionRecap.legs,
+    promo
   ]);
 
   useEffect(() => {
@@ -419,5 +416,22 @@ function ChooseSolution({
     </div>
   );
 }
+
+ChooseSolution.propTypes = {
+  searchingTicket: PropTypes.object,
+  currentPassenger: PropTypes.object,
+  decrementStep: PropTypes.func,
+  solutionDetails: PropTypes.object,
+  solutionRecap: PropTypes.object,
+  setNextPassenger: PropTypes.func,
+  incrementStep: PropTypes.func,
+  loadPromotions: PropTypes.func,
+  setPromoSelected: PropTypes.func,
+  setTotalPrice: PropTypes.func,
+  resetCurrentPassenger: PropTypes.func,
+  currentTrip: PropTypes.string,
+  setCurrentTrip: PropTypes.func,
+  onGoNextBuy: PropTypes.func,
+};
 
 export default ChooseSolution;

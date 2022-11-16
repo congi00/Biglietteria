@@ -5,8 +5,9 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import PropTypes from "prop-types";
 
-function Loader({title, icon}) {
+const Loader = ({title, icon}) => {
   const classes = useStyles({ isRch: false });
 
   return (
@@ -30,5 +31,10 @@ function Loader({title, icon}) {
     </Dialog>
   );
 }
+
+Loader.propTypes = {
+  title: PropTypes.any,
+  icon: PropTypes.node
+};
 
 export default Loader;

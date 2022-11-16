@@ -6,6 +6,7 @@ import PassengersForm from "../Components/PassengersForm/PassengersForm.jsx";
 import { Box } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import { getDateFormat, minutesFormat, getPriceFormat } from "../utils";
+import PropTypes from "prop-types";
 
 const useStyles = makeStyles((theme, props) => {
   return {
@@ -44,7 +45,7 @@ const defaultValues = {
   LastName: "",
 };
 
-function PassengersInfos({
+const PassengersInfos = ({
   keyboardOpened,
   searchingTicket,
   solutionRecap,
@@ -53,7 +54,7 @@ function PassengersInfos({
   setNextPassenger,
   setContactInfos,
   incrementStep,
-}) {
+}) => {
   const classes = useStyles();
   const refform = useRef();
 
@@ -137,5 +138,16 @@ function PassengersInfos({
     </div>
   );
 }
+
+PassengersInfos.propTypes = {
+  keyboardOpened: PropTypes.bool,
+  searchingTicket: PropTypes.object,
+  solutionRecap: PropTypes.object,
+  currentPassenger: PropTypes.object,
+  totalPrices: PropTypes.number,
+  setNextPassenger: PropTypes.func,
+  setContactInfos: PropTypes.func,
+  incrementStep: PropTypes.func,
+};
 
 export default PassengersInfos;

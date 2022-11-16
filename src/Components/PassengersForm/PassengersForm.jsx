@@ -1,5 +1,6 @@
 import React, { useState, useImperativeHandle } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import useStyles from "./styles.js";
+import PropTypes from "prop-types";
 import { TextField, Switch } from "@material-ui/core";
 import {
   MuiPickersUtilsProvider,
@@ -9,25 +10,6 @@ import DateFnsUtils from "@date-io/date-fns"; // choose your lib
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { forwardRef } from "react";
 
-const useStyles = makeStyles((theme, props) => {
-  return {
-    textInput: {
-      backgroundColor: "#fff",
-      boxSizing: "border-box",
-      border: "2px solid #A7A7A7",
-    },
-    boxField: {
-      display: "flex",
-      flexDirection: "column",
-      marginBottom: "20px",
-      "& label": {
-        color: "#fff",
-        fontSize: "16px",
-        marginBottom: "2px",
-      },
-    },
-  };
-});
 
 const PassengersForm = forwardRef(({ defaultValues, setContactInfos }, ref) => {
   const classes = useStyles();
@@ -176,5 +158,10 @@ const PassengersForm = forwardRef(({ defaultValues, setContactInfos }, ref) => {
     </FormProvider>
   );
 });
+
+PassengersForm.propTypes = {
+  defaultValues: PropTypes.object, 
+  setContactInfos: PropTypes.func,
+};
 
 export default PassengersForm;

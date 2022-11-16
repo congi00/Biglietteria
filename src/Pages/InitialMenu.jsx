@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme, props) => {
   };
 });
 
-function InitialMenu({ incrementStep, setServiceSelected }) {
+const InitialMenu = ({ incrementStep, setServiceSelected }) => {
   const classes = useStyles();
 
   return (
@@ -163,6 +163,7 @@ function InitialMenu({ incrementStep, setServiceSelected }) {
 
 InitialMenu.propTypes = {
   incrementStep: PropTypes.func,
+  setServiceSelected: PropTypes.func
 };
 
 export default InitialMenu;

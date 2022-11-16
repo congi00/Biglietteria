@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import useStyles from "./styles.js";
 import Typography from "@material-ui/core/Typography";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
@@ -8,54 +8,15 @@ import FormControl from "@material-ui/core/FormControl";
 import Switch from "@material-ui/core/Switch";
 import Grid from "@material-ui/core/Grid";
 import { getPriceFormat } from "../../utils";
+import PropTypes from "prop-types";
 
-const useStyles = makeStyles((theme, props) => {
-  return {
-    promBox: {
-      color: "#fff",
-      padding: "40px 0 20px 40px",
-    },
-    itemBox: {
-      margin: "0 0 10px 40px",
-      width: "80vw",
-      height: "105px",
-      backgroundColor: "#fff",
-      padding: "20px",
-    },
-    choiceSit: {
-      color: "#fff",
-      width: "86vw",
-      display: "flex",
-      textAlign: "right",
-      justifyContent: "right",
-      margin: "25px 0px 20px",
-    },
-    descriptionItem: {
-      fontSize: "20px",
-      fontWeight: "600",
-    },
-    priceItem: {
-      textAlign: "right",
-      fontSize: "30px",
-      fontWeight: "600",
-    },
-    opacityOn: {
-      opacity: "0.5",
-    },
-    opacityOff: {
-      opacity: "1",
-    },
-  };
-});
-
-function PromotionsWidget({
+const PromotionsWidget = ({
   leg,
   serviceSelected,
   globalServiceSelected,
   promotionsSelection,
   setServiceSelected,
-  currentPassenger,
-}) {
+}) => {
   const classes = useStyles();
   const item = serviceSelected?.item;
   const [value, setValue] = React.useState(promotionsSelection[0].description);
@@ -72,7 +33,7 @@ function PromotionsWidget({
         let serviceUpdate = [...globalServiceSelected];
         serviceUpdate[leg] = {
           ...serviceUpdate[leg],
-          item: {...item, codePromo: promo.code}
+          item: { ...item, codePromo: promo.code },
         };
         setServiceSelected(serviceUpdate);
       }
@@ -156,5 +117,13 @@ function PromotionsWidget({
     </>
   );
 }
+
+PromotionsWidget.propTypes = {
+  leg: PropTypes.number,
+  serviceSelected: PropTypes.object,
+  globalServiceSelected: PropTypes.array,
+  promotionsSelection: PropTypes.array,
+  setServiceSelected: PropTypes.func,
+};
 
 export default React.memo(PromotionsWidget);

@@ -39,14 +39,14 @@ const useStyles = makeStyles((theme, props) => {
   };
 });
 
-function BuyTicket({
+const BuyTicket = ({
   searchingTicket,
   beforeCompiled,
   isKeyboardOpened,
   keyboardOpened,
   onGoNextBuy,
   setLastLeg
-}) {
+}) => {
   const classes = useStyles();
   const formEl = useRef(null);
   let errors = [
@@ -110,7 +110,12 @@ function BuyTicket({
 }
 
 BuyTicket.propTypes = {
-  incrementStep: PropTypes.func,
+  searchingTicket: PropTypes.func,
+  beforeCompiled: PropTypes.object,
+  isKeyboardOpened: PropTypes.func,
+  keyboardOpened: PropTypes.bool,
+  onGoNextBuy: PropTypes.func,
+  setLastLeg: PropTypes.func
 };
 
 export default BuyTicket;
