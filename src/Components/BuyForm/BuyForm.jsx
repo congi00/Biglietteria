@@ -7,11 +7,16 @@ import IconButton from "@material-ui/core/IconButton";
 import SwapVertIcon from "@material-ui/icons/SwapVert";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
+import DateRangeRoundedIcon from "@material-ui/icons/DateRangeRounded";
 import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
 import TextField from "@material-ui/core/TextField";
-import { MuiPickersUtilsProvider, DateTimePicker } from "@material-ui/pickers";
+import {
+  MuiPickersUtilsProvider,
+  DatePicker,
+  TimePicker,
+} from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns"; // choose your lib
 import { it } from "date-fns/locale";
 import { useImperativeHandle } from "react";
@@ -43,13 +48,15 @@ const BuyForm = forwardRef((props, _ref) => {
     roundtrip: beforeCompiled?.roundtrip || false,
     startDate: beforeCompiled?.startDate || null,
     returnDate: beforeCompiled?.returnDate || null,
+    startTime: beforeCompiled?.startTime || null,
+    returnTime: beforeCompiled?.returnTime || null,
     adultsN: beforeCompiled?.adultsN || 1,
     kidsN: beforeCompiled?.kidsN || 0,
   });
 
   const getLastLeg = () => {
     const leg = JSON.parse(localStorage.getItem("lastLeg"));
-    console.log(leg)
+    console.log(leg);
     setState({
       ...state,
       startStation: leg?.start,
@@ -71,6 +78,14 @@ const BuyForm = forwardRef((props, _ref) => {
 
   const handleChangeReturn = (event) => {
     setState({ ...state, returnDate: event });
+  };
+
+  const handleChangeStartT = (event) => {
+    setState({ ...state, startTime: event });
+  };
+
+  const handleChangeReturnT = (event) => {
+    setState({ ...state, returnTime: event });
   };
 
   const handleChangeInputN = (incDec, type) => {
@@ -189,11 +204,11 @@ const BuyForm = forwardRef((props, _ref) => {
             <div className={classes.swapIcon}>
               <IconButton
                 edge="start"
-                color="inherit"
+                style={{ color: "white" }}
                 aria-label="menu"
                 onClick={() => swapStations()}
               >
-                <SwapVertIcon color="#ffffff" />
+                <SwapVertIcon fontSize="large" />
               </IconButton>
             </div>
             <div className={classes.inputStation}>
@@ -255,29 +270,71 @@ const BuyForm = forwardRef((props, _ref) => {
             </label>
           </div>
 
-          <label className={classes.inputLabel}>Data e orario andata*</label>
-          <MuiPickersUtilsProvider utils={DateFnsUtils} locale={it}>
-            <DateTimePicker
-              name="startDate"
-              label="GG/MM/AAAA HH:MM"
-              inputVariant="outlined"
-              value={state.startDate}
-              onChange={handleChangeStart}
-              disablePast
-            />
-          </MuiPickersUtilsProvider>
-          <label className={classes.inputLabel}>Data e orario ritorno*</label>
-          <MuiPickersUtilsProvider utils={DateFnsUtils} locale={it}>
-            <DateTimePicker
-              name="returnDate"
-              label="GG/MM/AAAA HH:MM"
-              inputVariant="outlined"
-              value={state.returnDate}
-              onChange={handleChangeReturn}
-              minDate={state.startDate}
-              disabled={!state.roundtrip}
-            />
-          </MuiPickersUtilsProvider>
+          <div>
+            <label className={classes.inputLabel}>Data e orario andata*</label>
+            <div className={classes.dateContainer}>
+              <IconButton
+                edge="start"
+                className={classes.calendarBox}
+                aria-label="menu"
+                onClick={() => swapStations()}
+              >
+                <DateRangeRoundedIcon fontSize="large" />
+              </IconButton>
+              <MuiPickersUtilsProvider utils={DateFnsUtils} locale={it}>
+                <DatePicker
+                  className={classes.dateField}
+                  name="startDate"
+                  placeholder="GG/MM/AAAA"
+                  inputVariant="outlined"
+                  value={state.startDate}
+                  onChange={handleChangeStart}
+                  disablePast
+                />
+                <TimePicker
+                  className={classes.timeField}
+                  placeholder="HH:MM"
+                  inputVariant="outlined"
+                  value={state.startTime}
+                  onChange={handleChangeStartT}
+                  disablePast
+                />
+              </MuiPickersUtilsProvider>
+            </div>
+          </div>
+          <div>
+            <label className={classes.inputLabel}>Data e orario ritorno*</label>
+            <div className={classes.dateContainer}>
+              <IconButton
+                edge="start"
+                className={classes.calendarBox}
+                aria-label="menu"
+                onClick={() => swapStations()}
+              >
+                <DateRangeRoundedIcon fontSize="large" />
+              </IconButton>
+              <MuiPickersUtilsProvider utils={DateFnsUtils} locale={it}>
+                <DatePicker
+                  className={classes.dateField}
+                  name="returnDate"
+                  placeholder="GG/MM/AAAA"
+                  inputVariant="outlined"
+                  value={state.returnDate}
+                  onChange={handleChangeReturn}
+                  minDate={state.startDate}
+                  disabled={!state.roundtrip}
+                />
+                <TimePicker
+                  className={classes.timeField}
+                  placeholder="HH:MM"
+                  inputVariant="outlined"
+                  value={state.returnTime}
+                  onChange={handleChangeReturnT}
+                  disablePast
+                />
+              </MuiPickersUtilsProvider>
+            </div>
+          </div>
         </>
       ),
     },

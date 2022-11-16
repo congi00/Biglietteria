@@ -121,6 +121,8 @@ function App() {
           });
           break;
         }
+        default:
+          break;
       }
       setIsLoading(false);
     }, TIMEOUT_API_REQUEST);
@@ -153,6 +155,7 @@ function App() {
       }
       case "verifyTrenitalia": {
         console.log("Receipt");
+        break;
       }
       default: {
         break;

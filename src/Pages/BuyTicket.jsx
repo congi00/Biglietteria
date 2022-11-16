@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme, props) => {
     buyTicket: {
       backgroundColor: "#008100",
       paddingTop: "100px",
-      marginBottom: "120px",
+      marginBottom: "170px",
       height: "100vh"
     },
     buyTicketContainer: {
@@ -54,6 +54,8 @@ function BuyTicket({
     "Inserisci la stazione di arrivo",
     "Inserisci la data di partenza",
     "Inserisci la data di ritorno",
+    "Inserisci orario di partenza",
+    "Inserisci orario di ritorno",
   ];
 
   useEffect(() => {
@@ -69,8 +71,11 @@ function BuyTicket({
           if (!formState.startStation) alert(errors[0]);
           else if (!formState.arriveStation) alert(errors[1]);
           else if (!formState.startDate) alert(errors[2]);
+          else if (!formState.startTime) alert(errors[4]);
           else if (formState.roundtrip && !formState.returnDate)
             alert(errors[3]);
+          else if (formState.roundtrip && !formState.returnTime)
+            alert(errors[5]);
           else {
             onGoNextBuy("getSolution");
             searchingTicket(formState);
@@ -84,10 +89,10 @@ function BuyTicket({
             <IconButton
               edge="start"
               className={classes.menuButton}
-              color="inherit"
+              style={{ color: 'white' }}
               aria-label="menu"
             >
-              <HelpOutlineIcon color="#ffffff" />
+              <HelpOutlineIcon />
             </IconButton>
             <h2 className={classes.infoTitle}>Scopri il servizio</h2>
           </Box>

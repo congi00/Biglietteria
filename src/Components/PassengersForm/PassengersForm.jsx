@@ -1,15 +1,11 @@
-import React, { Fragment, useRef, useState, useImperativeHandle } from "react";
+import React, { useState, useImperativeHandle } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Box } from "@material-ui/core";
-import Typography from "@material-ui/core/Typography";
 import { TextField, Switch } from "@material-ui/core";
 import {
   MuiPickersUtilsProvider,
   DatePicker,
-  KeyboardDatePicker,
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns"; // choose your lib
-import { it } from "date-fns/locale";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { forwardRef } from "react";
 

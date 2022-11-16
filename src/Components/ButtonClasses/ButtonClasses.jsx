@@ -1,5 +1,4 @@
 import React from "react";
-import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { getPriceFormat } from "../../utils";

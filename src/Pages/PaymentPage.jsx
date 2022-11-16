@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import StepContainer from "../Components/StepContainer/StepContainer.jsx";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "../Components/Card/Card.jsx";
@@ -34,23 +34,17 @@ const useStyles = makeStyles((theme, props) => {
   };
 });
 
-const defaultValues = {
-  FirstName: "",
-  LastName: "",
-};
 
 function PaymentPage({
   searchingTicket,
   solutionRecap,
   totalPrices,
-  setNextPassenger,
-  setContactInfos,
-  incrementStep,
   onGoNextBuy,
 }) {
   const classes = useStyles();
   const [methodSelected, setMethodSelected] = useState("CONTANTI");
-  const totalPassengers = searchingTicket.adultsN + searchingTicket.kidsN;
+  console.log(methodSelected)
+
 
   useEffect(() => {
     window.scrollTo({top: 0, left: 0, behavior: 'smooth'});

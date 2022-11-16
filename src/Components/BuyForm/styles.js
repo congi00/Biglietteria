@@ -20,8 +20,8 @@ const useStyles = (theme, props) => {
       borderRadius: "0px",
       backgroundColor: "#fff",
       padding: "8px",
-      "& .MuiInput-underline:before":{
-        border: "0px"
+      "& .MuiInput-underline:before": {
+        border: "0px",
       },
     },
     inputLabel: {
@@ -88,7 +88,7 @@ const useStyles = (theme, props) => {
       marginRight: "10px",
       textAlign: "center",
       position: "relative",
-      top: "7px"
+      top: "7px",
     },
     cartaBox: {
       display: "flex",
@@ -97,7 +97,32 @@ const useStyles = (theme, props) => {
     },
     linkCard: {
       color: "yellow",
-      textDecoration: "underline"
+      textDecoration: "underline",
+    },
+    calendarBox: {
+      color: "#222",
+      backgroundColor: "#fff",
+      borderRadius: "5px",
+      padding: "8px",
+      marginRight: "20px",
+    },
+    dateField: {
+      height: "4vh",
+      width: "200px",
+      backgroundColor: "#fff",
+    },
+    timeField: {
+      height: "4vh",
+      width: "100px",
+      backgroundColor: "#fff",
+    },
+    dateContainer: {
+      margin: "20px",
+      width: "60vw",
+      display: "flex",
+      justifyContent: "space-around",
+      position: "relative",
+      left: "10vw"
     },
   };
 };

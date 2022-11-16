@@ -10,7 +10,7 @@ import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import Link from "@material-ui/core/Link";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import { minutesFormat, getPriceFormat } from "../utils";
+import { minutesFormat, getPriceFormat, getDateFormat, getTimeFormat } from "../utils";
 import { useState } from "react";
 import { useEffect } from "react";
 
@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme, props) => {
     solutionText: {
       marginBottom: "0",
       marginTop: "10px",
-      fontSize: "20px"
+      fontSize: "20px",
     },
     divider: {
       backgroundColor: "#4F4F4F",
@@ -183,7 +183,7 @@ function FindSolution({
     totalPage: 0,
     currentPage: 0,
   });
-  const isGoing = (currentTrip === "andata")
+  const isGoing = currentTrip === "andata";
   const [availableSolution, setAvailableSolution] = useState(false);
   const [solutionViewed, setSolutionViewed] = useState([]);
 
@@ -199,16 +199,15 @@ function FindSolution({
     });
 
     setSolutionViewed(_solutionViewed);
-  }, [availableSolution]);
-
+  }, [paginationData,solutions.data.itineraries,availableSolution]);
 
   useEffect(() => {
-    window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, []);
-  
+
   const propContent = [
     {
-      title: "Viaggio di "+ currentTrip,
+      title: "Viaggio di " + currentTrip,
       key: "goTravel",
       body: (
         <Box className={classes.recapBody}>
@@ -221,9 +220,33 @@ function FindSolution({
             <h5 className={classes.dataRecapTitle}>CartaFreccia </h5>
           </div>
           <div className={classes.dataRecap}>
-            <h5>{isGoing ? searchingTicket.startStation.name : searchingTicket.arriveStation.name}</h5>
-            <h5>{isGoing ? searchingTicket.arriveStation.name : searchingTicket.startStation.name}</h5>
-            <h5>{isGoing ? searchingTicket.startDate.toDateString() : searchingTicket.returnDate.toDateString()}</h5>
+            <h5>
+              {isGoing
+                ? searchingTicket.startStation.name
+                : searchingTicket.arriveStation.name}
+            </h5>
+            <h5>
+              {isGoing
+                ? searchingTicket.arriveStation.name
+                : searchingTicket.startStation.name}
+            </h5>
+            <h5>
+              {isGoing
+                ? getDateFormat(
+                    new Date(searchingTicket.startDate)
+                  )
+                : getDateFormat(
+                    new Date(searchingTicket.returnDate)
+                  )}
+                  { " " }
+              {isGoing
+                ? getTimeFormat(
+                    new Date(searchingTicket.startTime)
+                  )
+                : getTimeFormat(
+                    new Date(searchingTicket.returnTime)
+                  )}
+            </h5>
             <h5>{searchingTicket.adultsN}</h5>
             <h5>{searchingTicket.kidsN}</h5>
             <Button
@@ -263,25 +286,37 @@ function FindSolution({
             }
           </h5>
 
-          <Box display="flex" justifyContent="space-between" paddingRight={"60px"}>
-            <h5 className={classes.solutionText} style={{fontSize: "30px"}}>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            paddingRight={"60px"}
+          >
+            <h5 className={classes.solutionText} style={{ fontSize: "30px" }}>
               {startTime.getHours()}:{minutesFormat(startTime.getMinutes())} -{" "}
               {endTime.getHours()}:{minutesFormat(endTime.getMinutes())}
             </h5>
             <div>
-            {saleability ? (
-              <h5 className={classes.thinClass + " " + classes.solutionText} style={{fontSize: "30px"}}>
-                da <b>{getPriceFormat(solution?.price)} €</b>
-              </h5>
-            ) : (
-              <h5 className={classes.thinClass + " " + classes.solutionText} style={{fontSize: "30px"}}>
-                Non acquistabile
-              </h5>
-            )}
+              {saleability ? (
+                <h5
+                  className={classes.thinClass + " " + classes.solutionText}
+                  style={{ fontSize: "30px" }}
+                >
+                  da <b>{getPriceFormat(solution?.price)} €</b>
+                </h5>
+              ) : (
+                <h5
+                  className={classes.thinClass + " " + classes.solutionText}
+                  style={{ fontSize: "30px" }}
+                >
+                  Non acquistabile
+                </h5>
+              )}
             </div>
-            
           </Box>
-          <h5 className={classes.thinClass + " " + classes.solutionText} style={{margin: "0 0 20px"}}>
+          <h5
+            className={classes.thinClass + " " + classes.solutionText}
+            style={{ margin: "0 0 20px" }}
+          >
             {parseInt(duration[0])}h {duration[1]}min
           </h5>
 
@@ -303,7 +338,10 @@ function FindSolution({
           </div>
 
           <Box display="flex">
-            <h5 className={classes.thinClass + " " + classes.solutionText} style={{marginRight: "20px"}}>
+            <h5
+              className={classes.thinClass + " " + classes.solutionText}
+              style={{ marginRight: "20px" }}
+            >
               Cambi: <b>{solution?.legs.length - 1}</b>
             </h5>
             <h5 className={classes.thinClass + " " + classes.solutionText}>
@@ -330,7 +368,9 @@ function FindSolution({
                 offerte
               </Typography>
             </div>
-            <div style={{ margin: "20px 0", fontSize: "20px",display: "flex" }}>
+            <div
+              style={{ margin: "20px 0", fontSize: "20px", display: "flex" }}
+            >
               <input
                 name="roundtrip"
                 type="checkbox"
@@ -374,7 +414,7 @@ function FindSolution({
                       ...paginationData,
                       currentPage: backPage(paginationData.currentPage),
                     });
-                    window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+                    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
                   }}
                 >
                   {"<"} Soluzioni precedenti
@@ -394,7 +434,7 @@ function FindSolution({
                         ...paginationData,
                         currentPage: nextPage(paginationData.currentPage),
                       });
-                      window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+                      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
                     }}
                   >
                     Soluzioni successive{" >"}

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import StepContainer from "../Components/StepContainer/StepContainer.jsx";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "../Components/Card/Card.jsx";

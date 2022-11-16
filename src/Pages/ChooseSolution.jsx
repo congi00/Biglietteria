@@ -85,12 +85,11 @@ const getTrains = (trains) => {
 
 const getServicesAvailable = (promotions) => {
   let servicesAvailable = [];
-  promotions.map((item) => {
+  promotions.forEach((item) => {
     let code = item.code.split(";")[1];
-    let codePromo = item.code.split(";")[0];
     let description = item.description.split(" - ")[1];
     let indexOfService = servicesAvailable
-      .map((service) => service.code)
+      .forEach((service) => service.code)
       .indexOf(code);
     if (indexOfService === -1)
       servicesAvailable.push({
@@ -115,7 +114,7 @@ const getFirstAvailablePromo = (promos) => {
 
 const getPromotions = (code, promotions, passType) => {
   let promotionsAvailable = [];
-  promotions.map((item) => {
+  promotions.forEach((item) => {
     let compareCode = item.code.split(";")[1];
     if (compareCode === code)
       promotionsAvailable.push({
@@ -134,7 +133,7 @@ const getPromotions = (code, promotions, passType) => {
 
 const setInitialServicesSel = (legsRecap, servicesAvailable) => {
   let totalItems = [];
-  legsRecap.map((leg) => {
+  legsRecap.forEach((leg) => {
     totalItems.push({ item: servicesAvailable });
   });
   return totalItems;
@@ -149,7 +148,7 @@ const setFinalSelectedServices = (
 ) => {
   let totalPrice = 0;
   serviceSelected.forEach((service, index) => {
-    promotions.map((item) => {
+    promotions.forEach((item) => {
       let compareCode = item.code;
       if (compareCode === service.item.codePromo) {
         setPromoSelected(index, item);
@@ -207,10 +206,16 @@ function ChooseSolution({
       servicesSelected.push([...promotionChoice]);
     }
     loadPromotions(servicesSelected);
-  }, [promo]);
+  }, [
+    promo,
+    searchingTicket.adultsN,
+    loadPromotions,
+    searchingTicket.kidsN,
+    solutionRecap.legs,
+  ]);
 
   useEffect(() => {
-    window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, []);
 
   console.log("ChooseSolution -> render -> solutionDetails: ", solutionDetails);
