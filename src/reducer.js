@@ -3,6 +3,7 @@ export const initialState = {
   serviceSelected: null,
   isLoading: false,
   isPrinting: false,
+  isError: false,
   currentTrip: "andata",
   servicePromo:[],
   totalPrices: 0,
@@ -22,6 +23,8 @@ const reducer = (state, action) => {
       return { ...state, serviceSelected: action.payload.serviceSelected };
     case "SET_IS_PRINTING":
       return { ...state, isPrinting: action.payload.isPrinting };
+    case "SET_IS_ERROR":
+      return {...state, isError: !state.isError}
     case "SET_SEARCH_TICKET":
       return { ...state, searchingTicket: action.payload.searchingTicket };
     case "FOCUSED":

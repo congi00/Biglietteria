@@ -61,6 +61,9 @@ function App() {
   const setIsPrinting = (isPrinting) =>
     dispatch({ type: "SET_IS_PRINTING", payload: { isPrinting } });
 
+  const setIsError = () =>
+    dispatch({ type: "SET_IS_ERROR"})
+
   const setNextPassenger = (passType) =>
     dispatch({ type: "SET_NEXT_PASSENGER", payload: { passType } });
 
@@ -189,12 +192,14 @@ function App() {
           <Loader
             title={"RICERCA IN CORSO"}
             icon={<CircularProgress disableShrink />}
+            description={"Attendere"}
           />
         )}
         {state.isPrinting && (
           <Loader
             title={"STAMPA PRESCONTRINO IN CORSO"}
             icon={<ReceiptIcon />}
+            description={"Attendere"}
           />
         )}
         {
@@ -221,6 +226,8 @@ function App() {
                 isKeyboardOpened={isKeyboardOpened}
                 setLastLeg={setLastLeg}
                 keyboardOpened={state.keyboardOpened}
+                setIsError={setIsError}
+                isError={state.isError}
               />
             )}
 

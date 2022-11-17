@@ -7,7 +7,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import PropTypes from "prop-types";
 
-const Loader = ({title, icon}) => {
+const Loader = ({title, icon, description}) => {
   const classes = useStyles({ isRch: false });
 
   return (
@@ -24,7 +24,7 @@ const Loader = ({title, icon}) => {
         <DialogContentText>
           <Box className={classes.loaderBody}>
             {icon}
-            <h5>Attendere</h5>
+            <h5>{description}</h5>
           </Box>
         </DialogContentText>
       </DialogContent>
@@ -34,7 +34,8 @@ const Loader = ({title, icon}) => {
 
 Loader.propTypes = {
   title: PropTypes.any,
-  icon: PropTypes.node
+  icon: PropTypes.node,
+  description: PropTypes.string
 };
 
 export default Loader;
