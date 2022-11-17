@@ -182,6 +182,7 @@ function App() {
           setCurrentTrip={setCurrentTrip}
           setTotalPrice={setTotalPrice}
           totalPrice={state.totalPrices}
+          backTripPromo={state.servicePromo[1]}
         />
 
         {state.isLoading && (
