@@ -270,6 +270,8 @@ function App() {
                 setNextPassenger={setNextPassenger}
                 setContactInfos={setContactInfos}
                 incrementStep={incrementStep}
+                isError={state.isError}
+                setIsError={setIsError}
               />
             )}
             {state.step === 5 && state.serviceSelected === "BUY_TICKET" && (

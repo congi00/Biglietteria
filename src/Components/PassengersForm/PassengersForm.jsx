@@ -19,11 +19,14 @@ const PassengersForm = forwardRef(({ defaultValues, setContactInfos }, ref) => {
   const handleSubmit = methods.handleSubmit((data) => setContactInfos(data));
 
   useImperativeHandle(ref, () => ({
-    submit() {
-      handleSubmit();
+    submit : async() => {
+      const result = await handleSubmit();
+      return Object.keys(methods.formState.errors).length,Object.keys(methods.formState.errors)
     },
   }));
 
+  
+  
   return (
     <FormProvider {...methods}>
       <form className="form" onSubmit={handleSubmit}>
@@ -32,8 +35,9 @@ const PassengersForm = forwardRef(({ defaultValues, setContactInfos }, ref) => {
           <Controller
             className={classes.textInput}
             as={TextField}
-            name="FisrtName"
+            name="FirstName"
             control={methods.control}
+            rules={{ required: true }}
           />
         </section>
         <section className={classes.boxField}>
@@ -63,7 +67,6 @@ const PassengersForm = forwardRef(({ defaultValues, setContactInfos }, ref) => {
                   outlined
                 />
               )}
-              rules={{ required: true }}
             />
           </MuiPickersUtilsProvider>
         </section>

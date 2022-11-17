@@ -1,5 +1,9 @@
 import React, { useRef, useEffect } from "react";
 import StepContainer from "../Components/StepContainer/StepContainer.jsx";
+import Loader from "../Components/Loader/Loader.jsx";
+import ErrorOutlineRoundedIcon from "@material-ui/icons/ErrorOutlineRounded";
+import CloseRoundedIcon from "@material-ui/icons/CloseRounded";
+import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "../Components/Card/Card.jsx";
 import PassengersForm from "../Components/PassengersForm/PassengersForm.jsx";
@@ -7,6 +11,7 @@ import { Box } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import { getDateFormat, minutesFormat, getPriceFormat } from "../utils";
 import PropTypes from "prop-types";
+import { useState } from "react";
 
 const useStyles = makeStyles((theme, props) => {
   return {
@@ -28,15 +33,15 @@ const useStyles = makeStyles((theme, props) => {
       display: "flex",
       paddingLeft: "20px",
       lineHeight: "10px",
-      color: "#fff"
+      color: "#fff",
     },
-    infosBody:{
+    infosBody: {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
       flexDirection: "column",
-      color: "#fff"
-    }
+      color: "#fff",
+    },
   };
 });
 
@@ -54,15 +59,17 @@ const PassengersInfos = ({
   setNextPassenger,
   setContactInfos,
   incrementStep,
+  isError,
+  setIsError,
 }) => {
   const classes = useStyles();
   const refform = useRef();
+  const [errorDescription, setErrorDescription] = useState("");
 
   const totalPassengers = searchingTicket.adultsN + searchingTicket.kidsN;
 
-
   useEffect(() => {
-    window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, []);
 
   const recapCard = [
@@ -116,16 +123,52 @@ const PassengersInfos = ({
 
   return (
     <div className={classes.passengersInfos}>
+      {isError && (
+        <Loader
+          title={
+            <div>
+              ERRORE
+              <IconButton
+                edge="start"
+                className={classes.menuButton}
+                aria-label="menu"
+                onClick={() => setIsError()}
+              >
+                <CloseRoundedIcon />
+              </IconButton>
+            </div>
+          }
+          icon={<ErrorOutlineRoundedIcon />}
+          description={errorDescription}
+        />
+      )}
       <StepContainer
         onCancel={() => {}}
-        onGoOn={() => {
-          refform.current.submit();
-          if (currentPassenger.index === totalPassengers)
-            incrementStep()
-          else if (currentPassenger.index < searchingTicket.adultsN) {
-            setNextPassenger("adult");
-          } else {
-            setNextPassenger("kids");
+        onGoOn={async () => {
+          let validFormSubmit,
+            missingField = await refform.current.submit();
+          if (validFormSubmit === 0)
+            if (currentPassenger.index === totalPassengers) incrementStep();
+            else if (currentPassenger.index < searchingTicket.adultsN) {
+              setNextPassenger("adult");
+            } else {
+              setNextPassenger("kids");
+            }
+          else {
+            switch (missingField[0]) {
+              case "FirstName": {
+                setErrorDescription("Inserire il nome");
+                setIsError();
+                break;
+              }
+              case "LastName": {
+                setErrorDescription("Inserire il cognome");
+                setIsError();
+                break;
+              }
+              default:
+                break;
+            }
           }
         }}
         keyboardOpened={keyboardOpened}
@@ -137,7 +180,7 @@ const PassengersInfos = ({
       </StepContainer>
     </div>
   );
-}
+};
 
 PassengersInfos.propTypes = {
   keyboardOpened: PropTypes.bool,
@@ -148,6 +191,8 @@ PassengersInfos.propTypes = {
   setNextPassenger: PropTypes.func,
   setContactInfos: PropTypes.func,
   incrementStep: PropTypes.func,
+  isError: PropTypes.bool,
+  setIsError: PropTypes.func,
 };
 
 export default PassengersInfos;
