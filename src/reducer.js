@@ -6,6 +6,7 @@ export const initialState = {
   isError: false,
   currentTrip: "andata",
   servicePromo:[],
+  solutionRecap:[],
   totalPrices: 0,
   passengersInfos: [],
 };
@@ -40,7 +41,7 @@ const reducer = (state, action) => {
         currentPassenger: action.payload.currentPassenger,
       };
     case "SET_SOLUTION_RECAP":
-      return { ...state, solutionRecap: action.payload.solutionRecap };
+      return { ...state, solutionRecap: action.payload.newSolRecap };
     case "SET_NEXT_PASSENGER":
       return {
         ...state,

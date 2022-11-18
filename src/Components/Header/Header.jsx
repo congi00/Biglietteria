@@ -12,7 +12,7 @@ const getBackTripPrice = (backTripPromo) => {
   let totalAmount = 0;
   backTripPromo.forEach((passenger) => {
     passenger.forEach((promo) => {
-      totalAmount += promo.amount;
+      totalAmount += promo.realAmount;
     });
   });
   return totalAmount;
@@ -26,7 +26,8 @@ const onBackActions = (
   setCurrentTrip,
   setTotalPrice,
   totalPrice,
-  backTripPromo
+  backTripPromo,
+  reloadPromotions
 ) => {
   console.log(totalPrice);
   switch (serviceSelected) {
@@ -47,8 +48,9 @@ const onBackActions = (
           break;
         }
         case 4: {
-          if (currentTrip === "ritorno") getBackTripPrice(backTripPromo);
+          if (currentTrip === "ritorno") setTotalPrice(-getBackTripPrice(backTripPromo));
           else setTotalPrice(-totalPrice);
+          reloadPromotions()
           decrementStep();
           break;
         }
@@ -73,6 +75,7 @@ const Header = ({
   setTotalPrice,
   totalPrice,
   backTripPromo,
+  reloadPromotions
 }) => {
   const classes = useStyles();
 
@@ -91,7 +94,8 @@ const Header = ({
                   setCurrentTrip,
                   setTotalPrice,
                   totalPrice,
-                  backTripPromo
+                  backTripPromo,
+                  reloadPromotions
                 );
               }}
               edge="start"
@@ -127,6 +131,7 @@ Header.propTypes = {
   setTotalPrice: PropTypes.func,
   totalPrice: PropTypes.number,
   backTripPromo: PropTypes.array,
+  reloadPromotions: PropTypes.func
 };
 
 export default Header;

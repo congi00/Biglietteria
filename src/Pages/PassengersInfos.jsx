@@ -3,12 +3,16 @@ import StepContainer from "../Components/StepContainer/StepContainer.jsx";
 import Loader from "../Components/Loader/Loader.jsx";
 import ErrorOutlineRoundedIcon from "@material-ui/icons/ErrorOutlineRounded";
 import CloseRoundedIcon from "@material-ui/icons/CloseRounded";
+import ExpandMoreRoundedIcon from "@material-ui/icons/ExpandMoreRounded";
+import ExpandLessRoundedIcon from "@material-ui/icons/ExpandLessRounded";
 import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "../Components/Card/Card.jsx";
 import PassengersForm from "../Components/PassengersForm/PassengersForm.jsx";
+import PassengersDetails from "../Components/PassengersDetails/PassengersDetails.jsx";
 import { Box } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
+import Grid from "@material-ui/core/Grid";
 import { getDateFormat, minutesFormat, getPriceFormat } from "../utils";
 import PropTypes from "prop-types";
 import { useState } from "react";
@@ -17,9 +21,9 @@ const useStyles = makeStyles((theme, props) => {
   return {
     passengersInfos: {
       backgroundColor: "#008100",
-      paddingTop: "100px",
-      marginBottom: "120px",
-      height: "100vh",
+      paddingTop: "120px",
+      paddingBottom: "230px",
+      height: "100%",
       display: "flex",
       alignItems: "center",
       flexDirection: "column",
@@ -30,16 +34,22 @@ const useStyles = makeStyles((theme, props) => {
       justifyContent: "center",
     },
     recapBody: {
-      display: "flex",
-      paddingLeft: "20px",
-      lineHeight: "10px",
+      lineHeight: "25px !important",
       color: "#fff",
+      marginBottom: "40px",
     },
     infosBody: {
       display: "flex",
       justifyContent: "center",
-      alignItems: "center",
       flexDirection: "column",
+      color: "#fff",
+    },
+    detailsBar: {
+      color: "#fff",
+      display: "flex",
+      justifyContent: "space-between",
+    },
+    tripContainer: {
       color: "#fff",
     },
   };
@@ -48,12 +58,14 @@ const useStyles = makeStyles((theme, props) => {
 const defaultValues = {
   FirstName: "",
   LastName: "",
+  BirthDate: null
 };
 
 const PassengersInfos = ({
   keyboardOpened,
   searchingTicket,
   solutionRecap,
+  servicePromo,
   currentPassenger,
   totalPrices,
   setNextPassenger,
@@ -65,7 +77,10 @@ const PassengersInfos = ({
   const classes = useStyles();
   const refform = useRef();
   const [errorDescription, setErrorDescription] = useState("");
-
+  const [details, setDetails] = useState(false);
+  const goDate = new Date(solutionRecap[0].legs[0].startDateTime);
+  const backDate = new Date(solutionRecap[1]?.legs[0].startDateTime);
+  const legsRecap = [solutionRecap[0]?.legs, solutionRecap[1]?.legs];
   const totalPassengers = searchingTicket.adultsN + searchingTicket.kidsN;
 
   useEffect(() => {
@@ -77,27 +92,89 @@ const PassengersInfos = ({
       title: "Viaggio",
       key: "travel",
       body: (
-        <Box className={classes.recapBody}>
-          <Typography variant="h5">
-            {searchingTicket.startStation.name} -{" "}
-            {searchingTicket.arriveStation.name}
-          </Typography>
-          {searchingTicket.roundtrip && (
-            <Typography variant="h5">A/R</Typography>
+        <div>
+          <Box className={classes.recapBody}>
+            <Grid container spacing={3}>
+              <Grid item xs={9}>
+                <Typography variant="h5">
+                  {searchingTicket.startStation.name} -{" "}
+                  {searchingTicket.arriveStation.name}
+                </Typography>
+              </Grid>
+              <Grid item xs={3}>
+                {searchingTicket.roundtrip && (
+                  <Typography variant="h5">A/R</Typography>
+                )}
+              </Grid>
+              <Grid item xs={6} style={{ paddingTop: "0" }}>
+                <Typography variant="h5">
+                  Andata:
+                  {getDateFormat(goDate)}{" "}
+                  {new Date(solutionRecap[0].legs[0].startDateTime).getHours()}
+                  {":"}
+                  {minutesFormat(
+                    new Date(
+                      solutionRecap[0].legs[0].startDateTime
+                    ).getMinutes()
+                  )}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={6} style={{ paddingTop: "0" }}>
+                {searchingTicket.roundtrip && (
+                  <Typography variant="h5">
+                    Ritorno:
+                    {getDateFormat(backDate)}{" "}
+                    {new Date(
+                      solutionRecap[1].legs[0].startDateTime
+                    ).getHours()}
+                    {":"}
+                    {minutesFormat(
+                      new Date(
+                        solutionRecap[1].legs[0].startDateTime
+                      ).getMinutes()
+                    )}
+                  </Typography>
+                )}
+              </Grid>
+              <Grid item xs={12} style={{ paddingTop: "0" }}>
+                <Typography variant="h5">
+                  Totale: {getPriceFormat(totalPrices)} €
+                </Typography>
+              </Grid>
+            </Grid>
+          </Box>
+          <Box className={classes.detailsBar}>
+            <Typography variant="h5">Dettagli viaggio</Typography>
+            <IconButton
+              edge="start"
+              className={classes.menuButton}
+              aria-label="menu"
+              color="inherit"
+              onClick={() => {
+                setDetails(!details);
+              }}
+            >
+              {details ? <ExpandLessRoundedIcon /> : <ExpandMoreRoundedIcon />}
+            </IconButton>
+          </Box>
+          {details && (
+            <Box className={classes.tripContainer}>
+              <PassengersDetails
+                typeTrip={"ANDATA"}
+                legsRecap={legsRecap[0]}
+                servicePromo={servicePromo}
+              />
+              {searchingTicket.roundtrip && (
+                <PassengersDetails
+                  typeTrip={"RITORNO"}
+                  legsRecap={legsRecap[1]}
+                  servicePromo={servicePromo}
+                />
+              )}
+            </Box>
           )}
-          <Typography variant="h5">
-            Andata:
-            {getDateFormat(new Date(solutionRecap.legs[0].startDateTime))}{" "}
-            {new Date(solutionRecap.legs[0].startDateTime).getHours()}
-            {":"}
-            {minutesFormat(
-              new Date(solutionRecap.legs[0].startDateTime).getMinutes()
-            )}
-          </Typography>
-          <Typography variant="h5">
-            Totale: {getPriceFormat(totalPrices)} €
-          </Typography>
-        </Box>
+        </div>
       ),
     },
   ];
@@ -108,7 +185,7 @@ const PassengersInfos = ({
       key: "dataPassenger",
       body: (
         <Box className={classes.infosBody}>
-          <Typography variant="h5">
+          <Typography variant="h5" style={{marginBottom: "40px"}}>
             Passeggero {currentPassenger.index} di {totalPassengers}
           </Typography>
           <PassengersForm
@@ -174,7 +251,9 @@ const PassengersInfos = ({
         keyboardOpened={keyboardOpened}
       >
         <div className={classes.passengersInfosContainer}>
-          <Card content={recapCard} />
+          <div style={{marginBottom: "40px"}}>
+            <Card content={recapCard} />
+          </div>
           <Card content={detailsForm} />
         </div>
       </StepContainer>
@@ -185,6 +264,7 @@ const PassengersInfos = ({
 PassengersInfos.propTypes = {
   keyboardOpened: PropTypes.bool,
   searchingTicket: PropTypes.object,
+  servicePromo: PropTypes.array,
   solutionRecap: PropTypes.object,
   currentPassenger: PropTypes.object,
   totalPrices: PropTypes.number,

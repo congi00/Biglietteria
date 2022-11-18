@@ -35,6 +35,7 @@ const PassengersForm = forwardRef(({ defaultValues, setContactInfos }, ref) => {
           <Controller
             className={classes.textInput}
             as={TextField}
+            placeholder="Inserisci il nome"
             name="FirstName"
             control={methods.control}
             rules={{ required: true }}
@@ -45,6 +46,7 @@ const PassengersForm = forwardRef(({ defaultValues, setContactInfos }, ref) => {
           <Controller
             className={classes.textInput}
             as={TextField}
+            placeholder="Inserisci il cognome"
             name="LastName"
             control={methods.control}
             rules={{ required: true }}
@@ -55,23 +57,23 @@ const PassengersForm = forwardRef(({ defaultValues, setContactInfos }, ref) => {
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <Controller
               name="BirthDate"
-              className={classes.textInput}
               control={methods.control}
               render={({ ref, ...rest }) => (
                 <DatePicker
                   disableFuture
+                  className={classes.dateField}
                   openTo="year"
-                  format="dd/MM/yyyy"
+                  placeholder="GG/MM/AAAA"
+                  inputVariant="outlined"
                   views={["year", "month", "date"]}
                   {...rest}
-                  outlined
                 />
               )}
             />
           </MuiPickersUtilsProvider>
         </section>
 
-        <section>
+        <section style={{textAlign: "right"}}>
           <label>Il cliente vuole fornire i propri dati di contatto?</label>
           <Controller
             name="contactData"
@@ -94,6 +96,7 @@ const PassengersForm = forwardRef(({ defaultValues, setContactInfos }, ref) => {
               <Controller
                 className={classes.textInput}
                 as={TextField}
+                placeholder="Inserisci il numero di telefono"
                 name="Telephone"
                 control={methods.control}
               />
@@ -103,6 +106,7 @@ const PassengersForm = forwardRef(({ defaultValues, setContactInfos }, ref) => {
               <Controller
                 className={classes.textInput}
                 as={TextField}
+                placeholder="Inserisci l'email"
                 name="Email"
                 control={methods.control}
               />
@@ -112,6 +116,7 @@ const PassengersForm = forwardRef(({ defaultValues, setContactInfos }, ref) => {
               <Controller
                 className={classes.textInput}
                 as={TextField}
+                placeholder="Inserisci il numero della CartaFreccia"
                 name="CartaFreccia"
                 control={methods.control}
               />
@@ -119,7 +124,7 @@ const PassengersForm = forwardRef(({ defaultValues, setContactInfos }, ref) => {
           </>
         )}
 
-        <section>
+        <section style={{textAlign: "right"}}>
           <label>Il cliente ha un bonus/credito o una Carta Regalo?</label>
           <Controller
             name="contactData"
@@ -142,6 +147,7 @@ const PassengersForm = forwardRef(({ defaultValues, setContactInfos }, ref) => {
               <Controller
                 className={classes.textInput}
                 as={TextField}
+                placeholder="Inserisci il codice identificativo"
                 name="BonusCode"
                 control={methods.control}
               />
@@ -151,6 +157,7 @@ const PassengersForm = forwardRef(({ defaultValues, setContactInfos }, ref) => {
               <Controller
                 className={classes.textInput}
                 as={TextField}
+                placeholder="Inserisci il codice antifrode"
                 name="TrustCode"
                 control={methods.control}
               />

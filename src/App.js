@@ -39,7 +39,9 @@ function App() {
     dispatch({ type: "SET_SEARCH_TICKET", payload: { searchingTicket } });
 
   const solutionRecap = (solutionRecap) => {
-    dispatch({ type: "SET_SOLUTION_RECAP", payload: { solutionRecap } });
+    let newSolRecap = [...state.solutionRecap];
+    newSolRecap.push(solutionRecap)
+    dispatch({ type: "SET_SOLUTION_RECAP", payload: { newSolRecap } });
   };
 
   const loadPromotions = (promoSelected) => {
@@ -47,6 +49,12 @@ function App() {
     updateState.push(promoSelected);
     dispatch({ type: "SET_SERVICIES_SELECTED", payload: { updateState } });
   };
+
+  const reloadPromotions = () => {
+    let updateState = [...state.servicePromo];
+    updateState.pop();
+    dispatch({ type: "SET_SERVICIES_SELECTED", payload: { updateState } });
+  }
 
   const setLastLeg = (start, arrive) => {
     localStorage.setItem(
@@ -186,6 +194,7 @@ function App() {
           setTotalPrice={setTotalPrice}
           totalPrice={state.totalPrices}
           backTripPromo={state.servicePromo[1]}
+          reloadPromotions={reloadPromotions}
         />
 
         {state.isLoading && (
@@ -267,6 +276,7 @@ function App() {
                 solutionRecap={state.solutionRecap}
                 currentPassenger={state.currentPassenger}
                 totalPrices={state.totalPrices}
+                servicePromo={state.servicePromo}
                 setNextPassenger={setNextPassenger}
                 setContactInfos={setContactInfos}
                 incrementStep={incrementStep}

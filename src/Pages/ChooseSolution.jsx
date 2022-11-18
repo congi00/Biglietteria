@@ -149,9 +149,13 @@ const setFinalSelectedServices = (
 ) => {
   let totalPrice = 0;
   serviceSelected.forEach((service, index) => {
+    console.log("SERVICE: ",service)
     promotions.forEach((item) => {
       let compareCode = item.code;
       if (compareCode === service.item.codePromo) {
+        item.realAmount = currentPassenger.passType === "adult"
+        ? item.customDataField.adultAmount
+        : item.customDataField.childAmount
         setPromoSelected(index, item);
         totalPrice +=
           currentPassenger.passType === "adult"
@@ -159,6 +163,7 @@ const setFinalSelectedServices = (
             : item.customDataField.childAmount;
       }
     });
+
   });
   setTotalPrice(totalPrice);
   console.log("totalPrice: ", totalPrice);
@@ -181,24 +186,23 @@ function ChooseSolution({
   onGoNextBuy,
 }) {
   const classes = useStyles();
-  const legsRecap = solutionRecap?.legs;
+  const isBackTrip = currentTrip === "andata" ? 0 : 1
+  const legsRecap = solutionRecap[isBackTrip]?.legs;
   const promo = getFirstAvailablePromo(solutionDetails?.data?.purchasableItems);
   const purchasableItems = solutionDetails?.data.purchasableItems;
   const startTime = new Date(legsRecap[0].startDateTime);
   const endTime = new Date(legsRecap[legsRecap.length - 1].endDateTime);
   const totalPassengers = searchingTicket.adultsN + searchingTicket.kidsN;
-  const duration = solutionRecap?.journeyDuration.split(":");
+  const duration = solutionRecap[isBackTrip]?.journeyDuration.split(":");
   const servicesAvailable = getServicesAvailable(purchasableItems);
   const [serviceSelected, setServiceSelected] = useState(
     setInitialServicesSel(legsRecap, servicesAvailable[0])
   );
 
-  console.log("ChooseSolution -> render -> serviceSelected: ", serviceSelected);
-
   useEffect(() => {
     const totalP = searchingTicket.adultsN + searchingTicket.kidsN;
     const promotionChoice = [];
-    solutionRecap.legs.forEach((element) => {
+    solutionRecap[isBackTrip].legs.forEach((element) => {
       console.log(promo);
       promotionChoice.push(promo); //"20;30"
     });
@@ -215,12 +219,6 @@ function ChooseSolution({
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, []);
 
-  console.log("ChooseSolution -> render -> solutionDetails: ", solutionDetails);
-  console.log("ChooseSolution -> render -> solutionRecap: ", solutionRecap);
-  console.log(
-    "ChooseSolution -> render -> servicesAvailable[0]: ",
-    servicesAvailable[0]
-  );
 
   const propContent = [
     {
@@ -250,7 +248,7 @@ function ChooseSolution({
                   textAlign: "right",
                 }}
               >
-                da <b>{getPriceFormat(solutionRecap?.price)} €</b>
+                da <b>{getPriceFormat(solutionRecap[isBackTrip]?.price)} €</b>
               </Typography>
             </Grid>
             <Grid item xs={12} style={{ paddingTop: "0" }}>
