@@ -22,9 +22,8 @@ const getPassengersPromo = (trip, leg, servicePromo) => {
   servicePromo[trip]?.forEach((passenger) => {
     let alreadyExist = false;
     let indexExist = null;
-    if (
-      passenger[leg].realAmount === passenger[leg].customDataField.adultAmount
-    ) {
+
+    if (passenger.passengerType === "adulto") {
       totalPassengers[0]?.forEach((passengersInfos, index) => {
         if (passenger[leg].description === passengersInfos.description) {
           alreadyExist = true;
@@ -54,8 +53,10 @@ const getPassengersPromo = (trip, leg, servicePromo) => {
     }
   });
 
-  return totalPassengers.map((typeP) =>
-    typeP.map((element, index) => {
+  console.log("totalPassengers: ",totalPassengers)
+
+  return totalPassengers.map((typeP, index) =>
+    typeP.map((element) => {
       if (index === 0)
         return getBoxDescription(element, index, "Adulto, ", "Adulti, ");
       else return getBoxDescription(element, index, "Ragazzo, ", "Ragazzi, ");
@@ -63,10 +64,10 @@ const getPassengersPromo = (trip, leg, servicePromo) => {
   );
 };
 
-const PassengersDetails = ({ typeTrip, legsRecap, servicePromo }) => {
+const PassengersDetails = ({ typeTrip, legsRecap, servicePromo, trip }) => {
   const classes = useStyles();
   return (
-    <div style={{paddingTop: "15px"}}>
+    <div style={{ paddingTop: "15px" }}>
       <Typography variant="h5">VIAGGIO DI {typeTrip}</Typography>
       {legsRecap.map((leg, index) => {
         return (
@@ -109,8 +110,12 @@ const PassengersDetails = ({ typeTrip, legsRecap, servicePromo }) => {
                       leg.routeInfo.routeId}
                   </Typography>
                 </Grid>
-                <Grid item xs={12} style={{ paddingTop: "0", lineHeight: "27px" }}>
-                  {getPassengersPromo(0, index, servicePromo)}
+                <Grid
+                  item
+                  xs={12}
+                  style={{ paddingTop: "0", lineHeight: "27px" }}
+                >
+                  {getPassengersPromo(trip, index, servicePromo)}
                 </Grid>
               </Grid>
             </Box>
@@ -125,6 +130,7 @@ PassengersDetails.propTypes = {
   typeTrip: PropTypes.string,
   legsRecap: PropTypes.array,
   servicePromo: PropTypes.array,
+  trip: PropTypes.number
 };
 
 export default PassengersDetails;

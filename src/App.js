@@ -100,6 +100,7 @@ function App() {
     if (state.currentTrip === "andata")
       servicePromo[0][state.currentPassenger.index - 1][leg] = promo;
     else servicePromo[1][state.currentPassenger.index - 1][leg] = promo;
+    console.log("App -> SetPromoSelected -> servicePromo -> ",servicePromo)
     dispatch({ type: "SET_PROMO_CHOICE", payload: { servicePromo } });
   };
 

@@ -147,23 +147,25 @@ const setFinalSelectedServices = (
   currentPassenger,
   setTotalPrice
 ) => {
+  console.log(serviceSelected);
   let totalPrice = 0;
+  let promotionsCopy = [...promotions];
   serviceSelected.forEach((service, index) => {
-    console.log("SERVICE: ",service)
-    promotions.forEach((item) => {
+    console.log("SERVICE: ", service);
+    promotionsCopy.forEach((item) => {
       let compareCode = item.code;
+      let copyItem = item;
       if (compareCode === service.item.codePromo) {
-        item.realAmount = currentPassenger.passType === "adult"
-        ? item.customDataField.adultAmount
-        : item.customDataField.childAmount
-        setPromoSelected(index, item);
-        totalPrice +=
-          currentPassenger.passType === "adult"
-            ? item.customDataField.adultAmount
-            : item.customDataField.childAmount;
+        if (currentPassenger.passType === "adult") {
+          copyItem.realAmount = item.customDataField.adultAmount;
+          totalPrice += item.customDataField.adultAmount;
+        } else {
+          copyItem.realAmount = item.customDataField.childAmount;
+          totalPrice += item.customDataField.childAmount;
+        }
+        setPromoSelected(index, copyItem);
       }
     });
-
   });
   setTotalPrice(totalPrice);
   console.log("totalPrice: ", totalPrice);
@@ -186,7 +188,7 @@ function ChooseSolution({
   onGoNextBuy,
 }) {
   const classes = useStyles();
-  const isBackTrip = currentTrip === "andata" ? 0 : 1
+  const isBackTrip = currentTrip === "andata" ? 0 : 1;
   const legsRecap = solutionRecap[isBackTrip]?.legs;
   const promo = getFirstAvailablePromo(solutionDetails?.data?.purchasableItems);
   const purchasableItems = solutionDetails?.data.purchasableItems;
@@ -203,22 +205,25 @@ function ChooseSolution({
     const totalP = searchingTicket.adultsN + searchingTicket.kidsN;
     const promotionChoice = [];
     solutionRecap[isBackTrip].legs.forEach((element) => {
-      console.log(promo);
       promotionChoice.push(promo); //"20;30"
     });
+
     const servicesSelected = [];
     for (let i = 0; i < totalP; i++) {
       servicesSelected.push([...promotionChoice]);
+      if (i < searchingTicket.adultsN)
+        servicesSelected[i].passengerType = "adulto";
+      else servicesSelected[i].passengerType = "ragazzo";
     }
+
+    console.log("serviceSelected ----->",serviceSelected)
+
     loadPromotions(servicesSelected);
-  }, [
-    promo
-  ]);
+  }, []);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, []);
-
 
   const propContent = [
     {

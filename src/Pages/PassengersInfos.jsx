@@ -164,12 +164,14 @@ const PassengersInfos = ({
                 typeTrip={"ANDATA"}
                 legsRecap={legsRecap[0]}
                 servicePromo={servicePromo}
+                trip={0}
               />
               {searchingTicket.roundtrip && (
                 <PassengersDetails
                   typeTrip={"RITORNO"}
                   legsRecap={legsRecap[1]}
                   servicePromo={servicePromo}
+                  trip={1}
                 />
               )}
             </Box>
