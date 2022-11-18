@@ -7,6 +7,7 @@ import ExpandMoreRoundedIcon from "@material-ui/icons/ExpandMoreRounded";
 import ExpandLessRoundedIcon from "@material-ui/icons/ExpandLessRounded";
 import IconButton from "@material-ui/core/IconButton";
 import { makeStyles } from "@material-ui/core/styles";
+import Divider from "@material-ui/core/Divider";
 import Card from "../Components/Card/Card.jsx";
 import PassengersForm from "../Components/PassengersForm/PassengersForm.jsx";
 import PassengersDetails from "../Components/PassengersDetails/PassengersDetails.jsx";
@@ -52,13 +53,23 @@ const useStyles = makeStyles((theme, props) => {
     tripContainer: {
       color: "#fff",
     },
+    divider: {
+      backgroundColor: "#fff",
+      border: "1px solid #fff",
+      marginLeft: "0",
+      marginRight: "0"
+    },
+    totalGrid:{
+      color: "#fff",
+      marginBottom: "10px"
+    }
   };
 });
 
 const defaultValues = {
   FirstName: "",
   LastName: "",
-  BirthDate: null
+  BirthDate: null,
 };
 
 const PassengersInfos = ({
@@ -159,23 +170,49 @@ const PassengersInfos = ({
             </IconButton>
           </Box>
           {details && (
-            <Box className={classes.tripContainer}>
-              <PassengersDetails
-                typeTrip={"ANDATA"}
-                legsRecap={legsRecap[0]}
-                servicePromo={servicePromo}
-                trip={0}
-              />
-              {searchingTicket.roundtrip && (
+            <>
+              <Box className={classes.tripContainer}>
                 <PassengersDetails
-                  typeTrip={"RITORNO"}
-                  legsRecap={legsRecap[1]}
+                  typeTrip={"ANDATA"}
+                  legsRecap={legsRecap[0]}
                   servicePromo={servicePromo}
-                  trip={1}
+                  trip={0}
                 />
-              )}
-            </Box>
+                {searchingTicket.roundtrip && (
+                  <PassengersDetails
+                    typeTrip={"RITORNO"}
+                    legsRecap={legsRecap[1]}
+                    servicePromo={servicePromo}
+                    trip={1}
+                  />
+                )}
+              </Box>
+              <Grid className={classes.totalGrid} container spacing={3}>
+                <Grid
+                  item
+                  xs={6}
+                  style={{
+                    paddingTop: "0",
+                    lineHeight: "27px",
+                  }}
+                >
+                  <Typography variant="h5">Totale da pagare:</Typography>
+                </Grid>
+                <Grid
+                  item
+                  xs={6}
+                  style={{
+                    paddingTop: "0",
+                    lineHeight: "27px",
+                    textAlign: "right",
+                  }}
+                >
+                  <Typography variant="h5">{getPriceFormat(totalPrices)} €</Typography>
+                </Grid>
+              </Grid>
+            </>
           )}
+          <Divider variant="middle" className={classes.divider} />
         </div>
       ),
     },
@@ -187,7 +224,7 @@ const PassengersInfos = ({
       key: "dataPassenger",
       body: (
         <Box className={classes.infosBody}>
-          <Typography variant="h5" style={{marginBottom: "40px"}}>
+          <Typography variant="h5" style={{ marginBottom: "40px" }}>
             Passeggero {currentPassenger.index} di {totalPassengers}
           </Typography>
           <PassengersForm
@@ -253,7 +290,7 @@ const PassengersInfos = ({
         keyboardOpened={keyboardOpened}
       >
         <div className={classes.passengersInfosContainer}>
-          <div style={{marginBottom: "40px"}}>
+          <div style={{ marginBottom: "40px" }}>
             <Card content={recapCard} />
           </div>
           <Card content={detailsForm} />

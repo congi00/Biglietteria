@@ -8,11 +8,18 @@ import { Box } from "@material-ui/core";
 
 const getBoxDescription = (element, index, singleD, multipleD) => {
   return (
-    <div key={index}>
-      {element.totalNumb}
-      {element.totalNumb > 1 ? multipleD : singleD}
-      {element.description}{" "}
-    </div>
+    <Grid container spacing={3}>
+      <Grid item xs={6}>
+        <div key={index}>
+          {element.totalNumb}
+          {element.totalNumb > 1 ? multipleD : singleD}
+          {element.description}{" "}
+        </div>
+      </Grid>
+      <Grid item xs={6} style={{textAlign: "right"}}>
+        {getPriceFormat(element.price*element.totalNumb) + " €"}
+      </Grid>
+    </Grid>
   );
 };
 
@@ -36,6 +43,7 @@ const getPassengersPromo = (trip, leg, servicePromo) => {
         totalPassengers[0].push({
           totalNumb: 1,
           description: passenger[leg].description,
+          price: passenger[leg].realAmount
         });
     } else {
       totalPassengers[1]?.forEach((passengersInfos, index) => {
@@ -49,11 +57,12 @@ const getPassengersPromo = (trip, leg, servicePromo) => {
         totalPassengers[1].push({
           totalNumb: 1,
           description: passenger[leg].description,
+          price: passenger[leg].realAmount
         });
     }
   });
 
-  console.log("totalPassengers: ",totalPassengers)
+  console.log("totalPassengers: ", totalPassengers);
 
   return totalPassengers.map((typeP, index) =>
     typeP.map((element) => {
@@ -130,7 +139,7 @@ PassengersDetails.propTypes = {
   typeTrip: PropTypes.string,
   legsRecap: PropTypes.array,
   servicePromo: PropTypes.array,
-  trip: PropTypes.number
+  trip: PropTypes.number,
 };
 
 export default PassengersDetails;
