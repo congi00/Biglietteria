@@ -263,6 +263,7 @@ const PassengersInfos = ({
         onGoOn={async () => {
           let missingField = await refform.current.submit();
           if (missingField.length === 0){
+            refform.current.reset();
             if (currentPassenger.index === totalPassengers) incrementStep();
             else if (currentPassenger.index < searchingTicket.adultsN) {
               setNextPassenger("adult");

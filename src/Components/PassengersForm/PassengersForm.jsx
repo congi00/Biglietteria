@@ -1,4 +1,4 @@
-import React, { useState, useImperativeHandle } from "react";
+import React, { useState, useImperativeHandle, useEffect } from "react";
 import useStyles from "./styles.js";
 import PropTypes from "prop-types";
 import { TextField, Switch } from "@material-ui/core";
@@ -16,16 +16,21 @@ const PassengersForm = forwardRef(({ defaultValues, setContactInfos }, ref) => {
   const methods = useForm({ defaultValues });
   const [contactData, setContactData] = useState(false);
   const [giftCard, setGiftCard] = useState(false);
+  const [isSubmitSuccessful, setSubmitSuccessful] = useState(true);
   const handleSubmit = methods.handleSubmit((data) => setContactInfos(data));
 
   useImperativeHandle(ref, () => ({
     submit : async() => {
       const result = await handleSubmit();
+      Object.keys(methods.formState.errors).length === 0  ? setSubmitSuccessful(true) : setSubmitSuccessful(false)
       return Object.keys(methods.formState.errors)
     },
+    reset(){
+      methods.reset({FirstName: "",
+      LastName: "",
+      BirthDate: null,})
+    }
   }));
-
-  
   
   return (
     <FormProvider {...methods}>
