@@ -277,7 +277,6 @@ const BuyForm = forwardRef(({isKeyboardOpened , beforeCompiled}, _ref) => {
                 edge="start"
                 className={classes.calendarBox}
                 aria-label="menu"
-                onClick={() => swapStations()}
               >
                 <DateRangeRoundedIcon fontSize="large" />
               </IconButton>
@@ -309,7 +308,6 @@ const BuyForm = forwardRef(({isKeyboardOpened , beforeCompiled}, _ref) => {
                 edge="start"
                 className={classes.calendarBox}
                 aria-label="menu"
-                onClick={() => swapStations()}
               >
                 <DateRangeRoundedIcon fontSize="large" />
               </IconButton>
