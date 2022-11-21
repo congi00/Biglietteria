@@ -273,6 +273,7 @@ function App() {
             {state.step === 4 && state.serviceSelected === "BUY_TICKET" && (
               <PassengersInfos
                 keyboardOpened={state.keyboardOpened}
+                isKeyboardOpened={isKeyboardOpened}
                 searchingTicket={state.searchingTicket}
                 solutionRecap={state.solutionRecap}
                 currentPassenger={state.currentPassenger}

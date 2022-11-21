@@ -74,6 +74,7 @@ const defaultValues = {
 
 const PassengersInfos = ({
   keyboardOpened,
+  isKeyboardOpened,
   searchingTicket,
   solutionRecap,
   servicePromo,
@@ -231,6 +232,7 @@ const PassengersInfos = ({
             ref={refform}
             setContactInfos={setContactInfos}
             defaultValues={defaultValues}
+            isKeyboardOpened={isKeyboardOpened}
           />
         </Box>
       ),
