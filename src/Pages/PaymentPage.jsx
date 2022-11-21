@@ -6,6 +6,7 @@ import { Box } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import LocalAtmIcon from "@material-ui/icons/LocalAtm";
+import PassengersDetails from "../Components/PassengersDetails/PassengersDetails.jsx";
 import { getDateFormat, minutesFormat, getPriceFormat } from "../utils";
 import PropTypes from "prop-types";
 
@@ -35,22 +36,21 @@ const useStyles = makeStyles((theme, props) => {
   };
 });
 
-
 const PaymentPage = ({
   searchingTicket,
   solutionRecap,
   totalPrices,
   onGoNextBuy,
+  servicePromo
 }) => {
   const classes = useStyles();
   const [methodSelected, setMethodSelected] = useState("CONTANTI");
-  console.log(methodSelected)
-
+  const legsRecap = [solutionRecap[0]?.legs, solutionRecap[1]?.legs];
+  console.log(methodSelected);
 
   useEffect(() => {
-    window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }, []);
-
 
   const recapCard = [
     {
@@ -58,22 +58,22 @@ const PaymentPage = ({
       key: "travel",
       body: (
         <Box className={classes.recapBody}>
-          <Typography variant="h5">
-            {searchingTicket.startStation.name} -{" "}
-            {searchingTicket.arriveStation.name}
-          </Typography>
-          {searchingTicket.roundtrip && (
-            <Typography variant="h5">A/R</Typography>
-          )}
-          <Typography variant="h5">
-            Andata:
-            {getDateFormat(new Date(solutionRecap.legs[0].startDateTime))}{" "}
-            {new Date(solutionRecap.legs[0].startDateTime).getHours()}
-            {":"}
-            {minutesFormat(
-              new Date(solutionRecap.legs[0].startDateTime).getMinutes()
+          <Box className={classes.tripContainer}>
+            <PassengersDetails
+              typeTrip={"ANDATA"}
+              legsRecap={legsRecap[0]}
+              servicePromo={servicePromo}
+              trip={0}
+            />
+            {searchingTicket.roundtrip && (
+              <PassengersDetails
+                typeTrip={"RITORNO"}
+                legsRecap={legsRecap[1]}
+                servicePromo={servicePromo}
+                trip={1}
+              />
             )}
-          </Typography>
+          </Box>
           <Typography variant="h5">
             Totale: {getPriceFormat(totalPrices)} €
           </Typography>
@@ -124,9 +124,12 @@ const PaymentPage = ({
 
   return (
     <div className={classes.paymentPage}>
-      <StepContainer onCancel={() => {}} onGoOn={() => {
-        onGoNextBuy("verifyTrenitalia");
-      }}>
+      <StepContainer
+        onCancel={() => {}}
+        onGoOn={() => {
+          onGoNextBuy("verifyTrenitalia");
+        }}
+      >
         <div className={classes.paymentPageContainer}>
           <Card content={recapCard} />
           <Card content={detailsForm} />
@@ -134,8 +137,7 @@ const PaymentPage = ({
       </StepContainer>
     </div>
   );
-}
-
+};
 
 PaymentPage.propTypes = {
   searchingTicket: PropTypes.object,

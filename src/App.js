@@ -294,6 +294,7 @@ function App() {
                 setContactInfos={setContactInfos}
                 incrementStep={incrementStep}
                 onGoNextBuy={onGoNextBuy}
+                servicePromo={state.servicePromo}
               />
             )}
           </Suspense>
