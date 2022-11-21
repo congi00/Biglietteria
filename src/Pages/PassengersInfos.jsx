@@ -261,16 +261,15 @@ const PassengersInfos = ({
       <StepContainer
         onCancel={() => {}}
         onGoOn={async () => {
-          let validFormSubmit,
-            missingField = await refform.current.submit();
-          if (validFormSubmit === 0)
+          let missingField = await refform.current.submit();
+          if (missingField.length === 0){
             if (currentPassenger.index === totalPassengers) incrementStep();
             else if (currentPassenger.index < searchingTicket.adultsN) {
               setNextPassenger("adult");
             } else {
               setNextPassenger("kids");
             }
-          else {
+          }else {
             switch (missingField[0]) {
               case "FirstName": {
                 setErrorDescription("Inserire il nome");

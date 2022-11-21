@@ -21,7 +21,7 @@ const PassengersForm = forwardRef(({ defaultValues, setContactInfos }, ref) => {
   useImperativeHandle(ref, () => ({
     submit : async() => {
       const result = await handleSubmit();
-      return Object.keys(methods.formState.errors).length,Object.keys(methods.formState.errors)
+      return Object.keys(methods.formState.errors)
     },
   }));
 
